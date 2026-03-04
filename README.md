@@ -1,4 +1,7 @@
-﻿# Observable Replay Lab (MRI)
+﻿[![DOI](https://zenodo.org/badge/1172138352.svg)](https://doi.org/10.5281/zenodo.18856604)
+Repository DOI: https://doi.org/10.5281/zenodo.18856604
+
+# Observable Replay Lab (MRI)
 
 This repository is a minimal reference implementation for **observable-only** and **no-meta** autonomous intelligence workflows with **evaluator-independence**, **deterministic replay**, and **reproducible audit** as first-class requirements. It packages a replayable **gate model** and metrology-driven **epistemics** pipeline with explicit **identifiability** and **uncertainty** checks, including **doubling time** and **phase transition** signals. The design prioritizes machine-readability, schema validation, and capture-resilience proxies for AI crawler discoverability and reuse.
 

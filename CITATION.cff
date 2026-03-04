@@ -3,6 +3,8 @@ message: "If you use this repository, please cite the software and the two sourc
 title: "observable-replay-lab: Observable-Only Deterministic Replay MRI"
 type: software
 version: 0.1.0
+doi: "10.5281/zenodo.18856604"
+url: "https://doi.org/10.5281/zenodo.18856604"
 license: Apache-2.0
 authors:
   - family-names: "Takahashi"

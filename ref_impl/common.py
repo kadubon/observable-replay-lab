@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import os
 import random
 from pathlib import Path
 from typing import Any, Dict, Iterable, List
@@ -26,12 +27,21 @@ def ensure_dir(path: Path) -> Path:
 
 
 def to_repo_relative(path: Path) -> str:
-    """Return a repo-relative POSIX path when possible."""
+    """Return a repo-root-based relative POSIX path when possible.
+
+    For paths outside the repository root, this returns an explicit relative path
+    (for example ../../tmp/...), avoiding absolute local paths in artifacts.
+    """
     resolved = path.resolve()
+    root_resolved = ROOT.resolve()
     try:
-        return resolved.relative_to(ROOT.resolve()).as_posix()
+        return resolved.relative_to(root_resolved).as_posix()
     except ValueError:
-        return resolved.as_posix()
+        try:
+            return Path(os.path.relpath(resolved, start=root_resolved)).as_posix()
+        except ValueError:
+            # Different drive on Windows: fallback to absolute as last resort.
+            return resolved.as_posix()
 
 
 def resolve_repo_path(path_value: str | Path) -> Path:

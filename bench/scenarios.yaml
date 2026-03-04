@@ -1,0 +1,56 @@
+﻿scenarios:
+  - name: clean
+    timesteps: 36
+    base_signal: 0.45
+    signal_slope: 0.018
+    seasonality: 0.04
+    intervention_step: 16
+    intervention_boost: 0.35
+    signal_noise_std: 0.01
+    target_noise_std: 0.02
+    missing_prob: 0.00
+    delayed_prob: 0.00
+    garbled_prob: 0.00
+    external_label_prob: 0.00
+
+  - name: missing
+    timesteps: 36
+    base_signal: 0.45
+    signal_slope: 0.018
+    seasonality: 0.04
+    intervention_step: 16
+    intervention_boost: 0.35
+    signal_noise_std: 0.01
+    target_noise_std: 0.02
+    missing_prob: 0.20
+    delayed_prob: 0.00
+    garbled_prob: 0.00
+    external_label_prob: 0.10
+
+  - name: delayed
+    timesteps: 36
+    base_signal: 0.45
+    signal_slope: 0.018
+    seasonality: 0.04
+    intervention_step: 16
+    intervention_boost: 0.35
+    signal_noise_std: 0.01
+    target_noise_std: 0.02
+    missing_prob: 0.00
+    delayed_prob: 0.25
+    garbled_prob: 0.00
+    external_label_prob: 0.05
+
+  - name: garbled
+    timesteps: 36
+    base_signal: 0.45
+    signal_slope: 0.018
+    seasonality: 0.04
+    intervention_step: 16
+    intervention_boost: 0.35
+    signal_noise_std: 0.01
+    target_noise_std: 0.02
+    missing_prob: 0.00
+    delayed_prob: 0.00
+    garbled_prob: 0.30
+    external_label_prob: 0.05

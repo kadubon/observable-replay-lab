@@ -1,0 +1,37 @@
+﻿spec_version: 0.1.0
+metrics:
+  - name: evaluator_dependence
+    type: proxy
+    range: [0.0, 1.0]
+    direction: lower_is_better
+    definition: >
+      Fraction of events that reference external labels (`observation.external_label=true`).
+      Proxy for dependence on external evaluator channels.
+  - name: capture_sensitivity
+    type: proxy
+    range: [0.0, 1.0]
+    direction: lower_is_better
+    definition: >
+      Absolute relative change in policy-relevant output under noisy logs:
+      |doubling_time_clean - doubling_time_noisy| / max(doubling_time_clean, 1e-9).
+      Proxy for sensitivity to garbling/missing/delay.
+  - name: replay_consistency
+    type: proxy
+    range: [0.0, 1.0]
+    direction: higher_is_better
+    definition: >
+      1.0 when deterministic replay output hash equals primary run hash, else 0.0.
+  - name: plural_feasibility
+    type: proxy
+    range: [0.0, 1.0]
+    direction: higher_is_better
+    definition: >
+      Fraction of benchmark scenarios where both STE critical condition is true
+      and MTE has no failure flags.
+  - name: identifiability_margin
+    type: proxy
+    range: [0.0, 1.0]
+    direction: higher_is_better
+    definition: >
+      max(0, 1 - log10(condition_number + 1)/6) if identifiable else 0.
+      Proxy for numerical distance from degeneracy.

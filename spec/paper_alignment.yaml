@@ -1,0 +1,39 @@
+alignment_version: 0.1.0
+intent: >
+  Explicit mapping between the two TeX papers in /paper and this minimal MRI repository.
+  Mapping is proxy-level by design and avoids theorem-equivalence claims.
+papers:
+  - id: ste_2026
+    tex_path: paper/Sovereign Takeoff Engine.tex
+    title: "Sovereign Takeoff Engine (STE): Observable-Only Supergrowth Laws for No-Meta Autonomous Intelligence"
+    doi: https://doi.org/10.5281/zenodo.18828900
+  - id: mte_2026
+    tex_path: paper/Metrology-Theoretic Epistemics Engine.tex
+    title: "Metrology-Theoretic Epistemics Engine (MTE): Observable-Only Metrology for Long-Horizon Autonomous Intelligence"
+    doi: https://doi.org/10.5281/zenodo.18845340
+concept_mapping:
+  - paper_term: "observable-only strict artifacts"
+    repo_proxy: "schemas/log_event.schema.json + deterministic replay hash"
+    alignment: direct
+  - paper_term: "no-meta operational stance"
+    repo_proxy: "evaluator_dependence metric and external_label proxy"
+    alignment: proxy
+  - paper_term: "gate semantics"
+    repo_proxy: "ref_impl/ste_sim.py gate_state and regime_change"
+    alignment: proxy
+  - paper_term: "certified growth signal"
+    repo_proxy: "ste.mean_growth_rate, ste.doubling_time, ste.critical_condition"
+    alignment: proxy
+  - paper_term: "identifiability supply"
+    repo_proxy: "ref_impl/mte_core.py rank and condition number checks"
+    alignment: proxy
+  - paper_term: "uncertainty accounting"
+    repo_proxy: "mte.uncertainty and failure_flags"
+    alignment: proxy
+  - paper_term: "replay-auditable validation"
+    repo_proxy: "cli validate + JSON Schema + replay hash equality"
+    alignment: direct
+non_claims:
+  - "This repository does not claim full theorem coverage of either paper."
+  - "This repository does not claim physical-law fidelity."
+  - "This repository does not claim deployment-ready governance completeness."

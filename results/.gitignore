@@ -1,0 +1,3 @@
+﻿# Keep this directory in git while ignoring generated artifacts.
+*
+!.gitignore

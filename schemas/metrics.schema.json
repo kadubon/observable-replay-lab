@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/metrics.schema.json",
+  "title": "Metrics",
+  "type": "object",
+  "required": [
+    "evaluator_dependence",
+    "capture_sensitivity",
+    "replay_consistency",
+    "plural_feasibility",
+    "identifiability_margin"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "evaluator_dependence": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+    "capture_sensitivity": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+    "replay_consistency": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+    "plural_feasibility": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+    "identifiability_margin": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+  }
+}
+

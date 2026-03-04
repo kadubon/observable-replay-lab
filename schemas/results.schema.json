@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/results.schema.json",
+  "title": "ExperimentResult",
+  "type": "object",
+  "required": [
+    "run_id",
+    "seed",
+    "scenario",
+    "ste",
+    "mte",
+    "metrics",
+    "replay",
+    "artifacts"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "run_id": { "type": "string" },
+    "seed": { "type": "integer", "minimum": 0 },
+    "scenario": { "type": "string" },
+    "ste": {
+      "type": "object",
+      "required": [
+        "mean_growth_rate",
+        "final_gate_state",
+        "doubling_time",
+        "regime_change_count",
+        "critical_condition"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "mean_growth_rate": { "type": "number" },
+        "final_gate_state": { "type": "integer", "enum": [0, 1] },
+        "doubling_time": { "type": "number" },
+        "regime_change_count": { "type": "integer", "minimum": 0 },
+        "critical_condition": { "type": "boolean" }
+      }
+    },
+    "mte": {
+      "type": "object",
+      "required": [
+        "identifiable",
+        "rank",
+        "condition_number",
+        "uncertainty",
+        "failure_flags",
+        "coefficients"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "identifiable": { "type": "boolean" },
+        "rank": { "type": "integer", "minimum": 0 },
+        "condition_number": { "type": "number", "minimum": 0.0 },
+        "uncertainty": { "type": "number", "minimum": 0.0 },
+        "failure_flags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "coefficients": {
+          "type": "array",
+          "items": { "type": "number" }
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "required": [
+        "evaluator_dependence",
+        "capture_sensitivity",
+        "replay_consistency",
+        "plural_feasibility",
+        "identifiability_margin"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "evaluator_dependence": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+        "capture_sensitivity": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+        "replay_consistency": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+        "plural_feasibility": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+        "identifiability_margin": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+      }
+    },
+    "replay": {
+      "type": "object",
+      "required": ["primary_hash", "replay_hash", "match"],
+      "additionalProperties": false,
+      "properties": {
+        "primary_hash": { "type": "string" },
+        "replay_hash": { "type": "string" },
+        "match": { "type": "boolean" }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "required": ["log_path", "result_path"],
+      "additionalProperties": false,
+      "properties": {
+        "log_path": {
+          "type": "string",
+          "pattern": "^(?![A-Za-z]:\\\\\\\\)(?!/).+"
+        },
+        "result_path": {
+          "type": "string",
+          "pattern": "^(?![A-Za-z]:\\\\\\\\)(?!/).+"
+        }
+      }
+    }
+  }
+}
+

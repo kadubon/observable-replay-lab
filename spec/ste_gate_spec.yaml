@@ -1,0 +1,52 @@
+﻿spec_version: 0.1.0
+name: ste_minimal_gate
+objective: >
+  Deterministic observable-only gate model for piecewise growth with replay-auditable
+  doubling time, regime change detection, and critical condition reporting.
+inputs:
+  required_event_fields:
+    - timestep
+    - event_type
+    - observation.signal
+  optional_event_fields:
+    - observation.quality
+    - intervention.mode
+parameters:
+  base_rate:
+    type: number
+    default: 0.04
+    constraints: [">=0"]
+  boosted_rate:
+    type: number
+    default: 0.14
+    constraints: [">=base_rate"]
+  gate_threshold:
+    type: number
+    default: 0.65
+  critical_kappa:
+    type: number
+    default: 0.096
+  smoothing_alpha:
+    type: number
+    default: 0.3
+    constraints: [">0", "<=1"]
+definitions:
+  gate_state: "1 if smoothed_signal >= gate_threshold else 0"
+  growth_rate: "boosted_rate if gate_state=1 else base_rate"
+  doubling_time: "ln(2)/growth_rate if growth_rate>0 else Infinity"
+  regime_change: "Index set where gate_state(t) != gate_state(t-1)"
+  critical_condition: "True if mean(growth_rate) >= critical_kappa and at least one regime_change"
+determinism:
+  random_source: "No random draws in STE core"
+  sorting_rule: "Events sorted by (timestep,event_id) prior to simulation"
+  floating_point: "numpy float64"
+outputs:
+  required:
+    - ste.mean_growth_rate
+    - ste.final_gate_state
+    - ste.doubling_time
+    - ste.regime_change_count
+    - ste.critical_condition
+failure_conditions:
+  - missing required fields
+  - non-monotonic timestep after sorting by key uniqueness violation

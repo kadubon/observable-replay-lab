@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/audit_report.schema.json",
+  "title": "RepoAuditReport",
+  "type": "object",
+  "required": [
+    "timestamp_utc",
+    "seed",
+    "scenario",
+    "status",
+    "scores",
+    "discoverability",
+    "reproducibility",
+    "paper_alignment",
+    "security",
+    "warnings",
+    "hard_failures"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "timestamp_utc": { "type": "string" },
+    "seed": { "type": "integer", "minimum": 0 },
+    "scenario": { "type": "string" },
+    "status": { "type": "string", "enum": ["pass", "fail"] },
+    "scores": {
+      "type": "object",
+      "required": ["discoverability", "reproducibility", "paper_alignment", "security", "overall"],
+      "additionalProperties": false,
+      "properties": {
+        "discoverability": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "reproducibility": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "paper_alignment": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "security": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "overall": { "type": "integer", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "security": {
+      "type": "object",
+      "required": [
+        "absolute_path_hits",
+        "strong_secret_hits",
+        "weak_secret_hits",
+        "missing_gitignore_patterns",
+        "gitignore_security_patterns_complete"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "absolute_path_hits": { "type": "array" },
+        "strong_secret_hits": { "type": "array" },
+        "weak_secret_hits": { "type": "array" },
+        "missing_gitignore_patterns": { "type": "array", "items": { "type": "string" } },
+        "gitignore_security_patterns_complete": { "type": "boolean" }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "hard_failures": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

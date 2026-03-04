@@ -1,0 +1,46 @@
+﻿spec_version: 0.1.0
+name: mte_minimal_epistemics
+objective: >
+  Deterministic linear epistemics core that reports identifiability, uncertainty,
+  and failure signatures under missing, delayed, or garbled observations.
+inputs:
+  required_event_fields:
+    - timestep
+    - observation.signal
+    - observation.target
+  optional_event_fields:
+    - noise_flags.missing
+    - noise_flags.delayed
+    - noise_flags.garbled
+parameters:
+  cond_threshold:
+    type: number
+    default: 1000000.0
+  uncertainty_threshold:
+    type: number
+    default: 0.25
+  min_samples:
+    type: integer
+    default: 8
+  delay_penalty:
+    type: number
+    default: 0.03
+definitions:
+  design_matrix: "X=[1, signal, lagged_signal] on valid rows"
+  identifiability: "rank(X)=n_features and cond(X'X) <= cond_threshold"
+  uncertainty: "residual_variance + delay_penalty * delayed_fraction"
+  failure_detection:
+    - "identifiability == false"
+    - "uncertainty > uncertainty_threshold"
+    - "schema_violation or malformed event order"
+determinism:
+  random_source: "No random draws in MTE core"
+  missing_rule: "Rows with missing target are dropped deterministically"
+  delay_rule: "Lagged signal derived from previous observed timestep"
+outputs:
+  required:
+    - mte.identifiable
+    - mte.rank
+    - mte.condition_number
+    - mte.uncertainty
+    - mte.failure_flags

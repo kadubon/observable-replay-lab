@@ -1,0 +1,55 @@
+{
+  "manifest_version": "0.1.0",
+  "project": "observable-replay-lab",
+  "entrypoints": {
+    "human": "README.md",
+    "agent": "AGENTS.md",
+    "cli": "cli/run.py"
+  },
+  "commands": [
+    "python -m cli.run reproduce --seed 0",
+    "python -m cli.run validate --seed 0",
+    "python -m cli.run bench --seed 0",
+    "python -m cli.run summarize --seed 0 --scenario clean",
+    "python -m cli.run audit --seed 0",
+    "pytest -q"
+  ],
+  "specs": [
+    "spec/glossary.md",
+    "spec/ste_gate_spec.yaml",
+    "spec/mte_epistemics_spec.yaml",
+    "spec/metrics.yaml",
+    "spec/log_format.yaml",
+    "spec/paper_alignment.yaml"
+  ],
+  "schemas": [
+    "schemas/log_event.schema.json",
+    "schemas/results.schema.json",
+    "schemas/metrics.schema.json",
+    "schemas/audit_report.schema.json"
+  ],
+  "reference_implementation": [
+    "ref_impl/common.py",
+    "ref_impl/ste_sim.py",
+    "ref_impl/mte_core.py",
+    "ref_impl/metrics.py",
+    "ref_impl/replay.py"
+  ],
+  "papers": [
+    {
+      "title": "Sovereign Takeoff Engine (STE): Observable-Only Supergrowth Laws for No-Meta Autonomous Intelligence",
+      "doi": "https://doi.org/10.5281/zenodo.18828900",
+      "tex_path": "paper/Sovereign Takeoff Engine.tex"
+    },
+    {
+      "title": "Metrology-Theoretic Epistemics Engine (MTE): Observable-Only Metrology for Long-Horizon Autonomous Intelligence",
+      "doi": "https://doi.org/10.5281/zenodo.18845340",
+      "tex_path": "paper/Metrology-Theoretic Epistemics Engine.tex"
+    }
+  ],
+  "artifacts": {
+    "logs_dir": "results/logs",
+    "results_pattern": "results/result_<scenario>_seed<seed>.json",
+    "audit_pattern": "results/audit_report_seed<seed>.json"
+  }
+}

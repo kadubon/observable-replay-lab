@@ -1,0 +1,58 @@
+﻿format_version: 0.1.0
+type: jsonl
+required_ordering: [timestep, event_id]
+event_types:
+  - observe
+  - intervene
+  - checkpoint
+fields:
+  event_id:
+    type: string
+    description: Unique event identifier.
+  timestep:
+    type: integer
+    minimum: 0
+  timestamp:
+    type: string
+    format: date-time
+  event_type:
+    type: string
+    enum: [observe, intervene, checkpoint]
+  observation:
+    type: object
+    required: [signal, target]
+    properties:
+      signal:
+        type: number
+      target:
+        type: number
+      quality:
+        type: number
+      external_label:
+        type: boolean
+  intervention:
+    type: object
+    required: [mode]
+    properties:
+      mode:
+        type: string
+      strength:
+        type: number
+  noise_flags:
+    type: object
+    required: [missing, delayed, garbled]
+    properties:
+      missing:
+        type: boolean
+      delayed:
+        type: boolean
+      garbled:
+        type: boolean
+  provenance:
+    type: object
+    required: [scenario, seed]
+    properties:
+      scenario:
+        type: string
+      seed:
+        type: integer

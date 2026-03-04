@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/log_event.schema.json",
+  "title": "LogEvent",
+  "type": "object",
+  "required": [
+    "event_id",
+    "timestep",
+    "timestamp",
+    "event_type",
+    "observation",
+    "noise_flags",
+    "provenance"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "event_id": { "type": "string", "minLength": 1 },
+    "timestep": { "type": "integer", "minimum": 0 },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "event_type": {
+      "type": "string",
+      "enum": ["observe", "intervene", "checkpoint"]
+    },
+    "observation": {
+      "type": "object",
+      "required": ["signal", "target"],
+      "additionalProperties": true,
+      "properties": {
+        "signal": { "type": "number" },
+        "target": { "type": "number" },
+        "quality": { "type": "number" },
+        "external_label": { "type": "boolean" }
+      }
+    },
+    "intervention": {
+      "type": "object",
+      "required": ["mode", "strength"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "type": "string" },
+        "strength": { "type": "number" }
+      }
+    },
+    "noise_flags": {
+      "type": "object",
+      "required": ["missing", "delayed", "garbled"],
+      "additionalProperties": false,
+      "properties": {
+        "missing": { "type": "boolean" },
+        "delayed": { "type": "boolean" },
+        "garbled": { "type": "boolean" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["scenario", "seed"],
+      "additionalProperties": false,
+      "properties": {
+        "scenario": { "type": "string" },
+        "seed": { "type": "integer" }
+      }
+    }
+  }
+}
+

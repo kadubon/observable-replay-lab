@@ -1,0 +1,2100 @@
+% !TeX program = pdflatex
+\documentclass[11pt]{article}
+
+\begin{filecontents*}{\jobname.xmpdata}
+\Title{Metrology-Theoretic Epistemics Engine (MTE): Observable-Only Metrology for Long-Horizon Autonomous Intelligence}
+\Author{K. Takahashi}
+\Language{en-US}
+\Subject{A protocol and formalism for long-horizon observability, epistemic credit, and robustness under ontology drift and adversarial environments.}
+\Keywords{observable-only; no-meta; epistemic credit; observability credit; ontology drift; data availability sampling; erasure coding; succinct proofs; proof-carrying data; quantum reference frames; thermodynamics; Landauer principle; mechanism design; supermartingale coupling}
+\Publisher{Zenodo / Open Science}
+\end{filecontents*}
+
+
+% --- Machine readability / text extraction hygiene ---
+\usepackage{cmap}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\input{glyphtounicode.tex}
+\pdfgentounicode=1
+\usepackage{microtype}
+\usepackage{setspace}
+\setstretch{1.15}
+\setlength{\emergencystretch}{2em}
+
+
+% --- Core math & layout ---
+\usepackage[a4paper,margin=0.8in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+% --- Code blocks ---
+\usepackage{listings}
+
+% --- Hyperlinks / metadata (hyperref only; no hyperxmp) ---
+\usepackage[a-2b]{pdfx}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black
+}
+
+% --- Listings setup ---
+\lstdefinelanguage{YAML}{
+  keywords={true,false,null,y,n},
+  sensitive=false,
+  comment=[l]{\#},
+  morestring=[b]',
+  morestring=[b]"
+}
+\lstdefinelanguage{JSON}{
+  basicstyle=\ttfamily\small,
+  morestring=[b]",
+  showstringspaces=false
+}
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  breaklines=true,
+  frame=single,
+  framerule=0.3pt,
+  aboveskip=8pt,
+  belowskip=8pt
+}
+
+% --- Theorem environments ---
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\theoremstyle{plain}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+
+% --- Normative keywords ---
+\newcommand{\MUST}{\textbf{MUST}}
+\newcommand{\MUSTNOT}{\textbf{MUST NOT}}
+\newcommand{\SHOULD}{\textbf{SHOULD}}
+\newcommand{\SHOULDNOT}{\textbf{SHOULD NOT}}
+\newcommand{\MAY}{\textbf{MAY}}
+
+% --- House notation ---
+\newcommand{\STE}{\textsf{STE}}
+\newcommand{\MTE}{\textsf{MTE}}
+\newcommand{\lbl}[1]{\texttt{\footnotesize\nolinkurl{#1}}}
+\newcommand{\DefLabel}[1]{\hfill{\small\lbl{#1}}}
+
+% --- Math shortcuts ---
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Expect}{\mathbb{E}}
+\newcommand{\Filtration}{(\mathcal{F}_t)_{t\ge 0}}
+\newcommand{\deltas}{\Delta_s}
+\newcommand{\deltao}{\Delta_o}
+\newcommand{\Et}{\mathcal{E}_t}
+\newcommand{\epssat}{\epsilon_{\mathrm{sat}}}
+\newcommand{\gground}{\gamma_{\mathrm{ground}}}
+\newcommand{\Rg}{R_{\mathrm{g}}}
+\newcommand{\estr}{\epsilon_{\mathrm{struct}}}
+\newcommand{\clight}{c}
+\newcommand{\Emax}{E_{\max}}
+\newcommand{\fcap}{f_{\mathrm{cap}}}
+\newcommand{\Neff}{N_{\mathrm{eff}}}
+\newcommand{\Lms}{L_{\mathrm{ms}}}
+\newcommand{\kmax}{k_{\max}}
+\newcommand{\erisk}{\epsilon_{\mathrm{risk}}}
+\newcommand{\Spage}{S_{\mathrm{Page}}}
+\newcommand{\Sbh}{S_{\mathrm{BH}}}
+\newcommand{\Zo}{Z_o}
+\newcommand{\Zs}{Z_s}
+\newcommand{\PiRisk}{\Pi^{\mathrm{risk}}}
+\newcommand{\PiBridge}{\Pi^{\mathrm{bridge}}}
+\newcommand{\PiPhys}{\Pi^{\mathrm{phys}}}
+\newcommand{\PiDeni}{\Pi^{\mathrm{deni}}}
+\newcommand{\Vcouple}{V}
+
+\title{Metrology-Theoretic Epistemics Engine (MTE): \\Observable-Only Metrology for Long-Horizon Autonomous Intelligence}
+\author{K. Takahashi\thanks{Copyright 2026 K. Takahashi (ORCID: https://orcid.org/0009-0004-4273-3365), LICENSE: CC-BY-4.0}}
+\date{March 3, 2026}
+
+\begin{document}
+\setlength{\emergencystretch}{2em}
+\maketitle
+
+\begin{center}
+\textbf{Supplement contract.}
+\STE{}~\cite{STE2026} governs auditable growth claims via strict progress credit $\deltas(t)$ under \emph{no-meta} and \emph{observable-only} constraints.
+This supplement introduces \MTE{}, which governs auditable \emph{identifiability supply} via observability credit $\deltao(t)$ and ledger-accounted \emph{observability capital}.
+The design includes safeguards against proof-theoretic exhaustion (empirical reflection with metered soundness risk), ontological rupture (meta-morphism escrow), cosmological independence depletion (Page-limit discounting), trustless extortion (cryptographic myopia), and retroactive cryptographic decay (proactive proof freshening).
+\end{center}
+
+\section*{Machine Index (for autonomous parsers)}
+\begin{lstlisting}[language=YAML]
+entrypoints:
+  ste_imports:
+    - ass:ledger_observable_only
+    - def:strict_artifact
+    - def:ste_strict_progress_credit_alias
+    - ass:metric_regime_freeze_and_bridge
+    - ass:ste_liveness_alias
+    - ass:reserve_gate
+    - def:certified_rate_mu
+    - thm:anytime_valid_auditing
+    - def:ste_calibration_bundle_alias
+    - def:ste_reflection_budget_alias
+    - def:ste_physical_envelope_alias
+    - ass:no_deception_alias
+  mte_core_defs:
+    - def:observable_probability_space
+    - def:audit_stochastic_admissibility
+    - def:canonical_window_artifact_reducer
+    - def:dual_risk_ledger
+    - def:risk_penalty_channel_map
+    - def:conservative_uncertainty_set
+    - def:size_functional
+    - def:localized_regularization
+    - def:computable_localization
+    - def:contraction_response_certificate
+    - ass:regularity_certificate
+    - def:empirical_reflection_gate
+    - def:soundness_risk_budget
+    - def:predictor_class
+    - def:predictor_admissibility
+    - def:succinct_proof
+    - def:depth_certificate
+    - def:structural_exogeneity
+    - def:active_intervention
+    - def:causal_response_certificate
+    - def:observation_safety_envelope
+    - def:ontological_rupture_detector
+    - def:meta_morphism_escrow
+    - def:exogeneity_budget
+    - def:witness_capital
+    - def:witness_dependence_graph
+    - def:page_limit_discount
+    - def:interface_capital
+    - def:grounding_ratio
+    - def:observability_regime
+    - def:overlap_observables
+    - def:morphism_escrow
+    - def:epistemic_connection
+    - def:holonomy_element
+    - def:flatness_certificate
+    - def:escrow_chain_horizon_cutoff
+    - def:proxy_similarity_metric
+    - def:multiscale_persistence_spectrum
+    - def:persistent_proxy_clusters
+    - def:proxy_orthogonal_basis
+    - def:fragmentation_certificate
+    - def:fractional_intersection
+    - def:ecr
+    - def:ecr_net
+    - def:ecr_replay_kernel
+    - def:observability_credit
+    - def:gate_bit_decision_rules
+    - def:deltao_operator
+    - def:qrf_relative_artifact
+    - def:frame_invariant_proxy
+    - def:oracle_free_attack_signature
+    - def:cryptographic_myopia_certificate
+    - def:holographic_state_root
+    - def:erasure_coded_state_root
+    - def:data_availability_sampling
+    - def:rehydration_budget
+    - def:rehydration_lanes
+    - def:rehydration_fee_market
+    - def:freshening_epoch
+    - def:proof_carrying_data_wrapper
+    - def:mte_compute_budget
+    - def:joint_positive_region
+    - def:ste_looseness_sensitivity
+    - def:certified_uplift_functional
+    - def:gate_vector_schema
+    - def:policy_indistinguishability_audit
+    - def:dynamic_witness_dependence_process
+    - def:social_endogeneity_process
+    - def:physical_envelope_calibration
+    - def:physical_unit_signature
+  mte_core_props_thms:
+    - thm:paraconsistent_epistemic_isolation
+    - thm:canonical_bundle_determinism
+    - thm:dual_risk_ledger_consistency
+    - prop:dual_risk_probability_coherence
+    - prop:risk_penalty_monotonicity
+    - thm:topos_theoretic_translation
+    - thm:empirical_reflection_regularity
+    - prop:ontological_rupture_escrow
+    - prop:semantic_relic_freeze
+    - prop:epistemic_correspondence_principle
+    - thm:page_limit_entanglement_saturation
+    - thm:non_abelian_paradigm_holonomy
+    - thm:escrow_bound_semi_decidable
+    - thm:flatness_over_anchor_policy
+    - thm:resolution_of_singular_escrow
+    - prop:algorithmic_depth_gate
+    - thm:active_causal_depth_gate
+    - thm:simulation_breaking_intervention
+    - prop:anti_solipsism_ratio
+    - thm:multiscale_persistent_proxy_orthogonalization
+    - prop:proxy_orthogonalization
+    - prop:byzantine_resilient_proxy_intersection
+    - prop:topological_fragmentation_guard
+    - prop:cascade_decoupling
+    - prop:entanglement_monogamy_witness
+    - thm:qrf_relative_artifacts
+    - thm:measurement_backreaction_saturation
+    - thm:measurement_disturbance_tradeoff
+    - cor:spatiotemporal_witness_retardation
+    - thm:oracle_free_epistemic_escrow
+    - thm:extortion_nullification_myopia
+    - thm:plausible_deniability_meta_extortion
+    - thm:bayesian_decay_mixed_strategy
+    - thm:extortion_leverage_bound
+    - thm:landauer_cost_of_evaporation
+    - thm:erasure_coded_das
+    - thm:zk_succinct_rehydration
+    - thm:kugelblitz_rehydration_limit
+    - thm:cryptographic_heteroculture
+    - thm:proactive_cryptographic_freshening
+    - thm:data_availability_rehydration
+    - cor:nonlinear_rehydration_fee
+    - prop:mte_overhead_gate
+    - prop:graceful_epistemic_degradation
+    - prop:bridge_holonomy_cumulative_bound
+    - thm:risk_budget_composition
+    - thm:coupled_credit_supermartingale
+    - prop:ecr_kernel_algebraic_consistency
+    - thm:gate_vector_completeness
+    - cor:coupled_false_accept_bound
+    - prop:adaptive_witness_submodular
+    - prop:sybil_collusion_witness_bound
+    - thm:dynamic_collusion_lag_bound
+    - thm:endogeneity_discount_bound
+    - thm:risk_budgeted_optional_stopping
+    - prop:parser_determinism_invariance
+    - thm:kernel_to_test_supermartingale_lift
+    - thm:ste_physical_pushforward_nonoverlap
+    - thm:calibrated_physical_envelope_gate
+    - prop:no_deception_compatible_deniability
+    - thm:identifiability_takeoff
+    - thm:constructive_uplift_from_contraction
+    - lem:ecr_to_contraction
+    - thm:joint_takeoff_condition
+    - cor:post_omniscience_shift
+  operational_profile:
+    - sec:events_and_schemas
+    - sec:gate_rules
+    - sec:destructive_tests
+\end{lstlisting}
+
+\begin{abstract}\noindent
+\STE{}~\cite{STE2026} provides auditable growth laws under \emph{no-meta} and \emph{observable-only} constraints.
+This supplement formalizes the complementary bottleneck: \emph{identifiability supply}.
+\MTE{} defines observability capital, observability regimes, and a fail-closed observability credit $\deltao(t)$ driven by replay-verifiable ECR proxies.
+
+This paper addresses extreme-horizon failure modes:
+(i) deductive exhaustion (G\"odel-type unprovability or budget-limited proof search) via an empirical reflection gate with explicit soundness-risk accounting;
+(ii) ontological phase transitions via rupture detection and meta-morphism escrow;
+(iii) cosmological depletion of independent witness supply via a Page-limit discount;
+(iv) trustless extortion via cryptographic myopia bindings and mixed-strategy leverage bounds; and
+(v) retroactive cryptographic decay via proactive proof freshening with proof-carrying data wrappers.
+
+Relative to \STE{}, this paper enforces a strict non-overlap contract: strict-credit semantics, reserve/finality semantics, and reflective trust boundaries remain authoritative in \STE{}, while \MTE{} contributes computable observability operators, compositional risk accounting, bridge-holonomy distortion control, and a coupled credit supermartingale law.
+\end{abstract}
+
+\tableofcontents
+
+% ============================================================
+\section{Compatibility Layer: Imported Interfaces from \STE{}}\label{sec:ste-compat}
+\noindent\textbf{Non-overlap contract.}
+\MTE{} \MUSTNOT{} redefine \STE{} strict-credit semantics, fork/finality semantics, reserve admissibility, reflective trust boundaries, or physical substrate laws.
+Those are imported interfaces from \STE{}~\cite{STE2026}; \MTE{} only consumes them for observability-credit governance.
+
+\begin{lstlisting}[language=YAML,caption={STE authoritative labels consumed by MTE}]
+ste_alias_map:
+  ass:ledger_observable_only:
+    ste_refs: [ass:obs, ass:ledger]
+  def:strict_artifact:
+    ste_refs: [def:local_strict_projection, def:strict_completeness]
+  def:ste_strict_progress_credit_alias:
+    ste_refs: [def:strict_progress_credit]
+  ass:metric_regime_freeze_and_bridge:
+    ste_refs: [ass:metricfreeze, thm:bridge, thm:lineage]
+  ass:ste_liveness_alias:
+    ste_refs: [ass:liveness, thm:forkdelay, thm:byz]
+  ass:reserve_gate:
+    ste_refs: [ass:reservegate]
+  def:certified_rate_mu:
+    ste_refs: [def:mu]
+  thm:anytime_valid_auditing:
+    ste_refs: [thm:anytime]
+  def:ste_calibration_bundle_alias:
+    ste_refs: [def:calibration_bundle, ass:calibration]
+  def:ste_reflection_budget_alias:
+    ste_refs: [ass:empref, prop:rejuvenation, ass:paraconsistent, thm:explosionproof]
+  def:ste_physical_envelope_alias:
+    ste_refs: [ass:thermal, ass:relativistic, ass:holo, thm:thermfront, prop:kugel]
+  ass:no_deception_alias:
+    ste_refs: [ass:nondom, rem:no_deception]
+\end{lstlisting}
+
+\begin{assumption}[Observable-only ledger replay alias]\DefLabel{ass:ledger_observable_only}\label{ass:ledger_observable_only}
+The identifier \lbl{ass:ledger_observable_only} denotes the conjunction of \STE{} assumptions \lbl{ass:obs} and \lbl{ass:ledger}; \MTE{} treats it as imported and authoritative in \STE{}.
+\end{assumption}
+
+\begin{definition}[Strict artifact alias]\DefLabel{def:strict_artifact}\label{def:strict_artifact}
+\lbl{def:strict_artifact} is an interface alias for replay-stable strict artifacts obtained from \STE{} strict projection/completeness interfaces.
+\end{definition}
+
+\begin{definition}[Strict progress credit alias]\DefLabel{def:ste_strict_progress_credit_alias}\label{def:ste_strict_progress_credit_alias}
+\lbl{def:ste_strict_progress_credit_alias} aliases \STE{} \lbl{def:strict_progress_credit}; \MTE{} never mutates its recurrence or fail-closed clauses.
+\end{definition}
+
+\begin{assumption}[Metric-regime freeze with bridge alias]\DefLabel{ass:metric_regime_freeze_and_bridge}\label{ass:metric_regime_freeze_and_bridge}
+\lbl{ass:metric_regime_freeze_and_bridge} aliases \STE{} bridge controls (\lbl{ass:metricfreeze}, \lbl{thm:bridge}, \lbl{thm:lineage}).
+\end{assumption}
+
+\begin{assumption}[Liveness alias]\DefLabel{ass:ste_liveness_alias}\label{ass:ste_liveness_alias}
+\lbl{ass:ste_liveness_alias} aliases \STE{} liveness and fork-resolution bounds (\lbl{ass:liveness}, \lbl{thm:forkdelay}, \lbl{thm:byz}).
+\end{assumption}
+
+\begin{assumption}[Reserve gate alias]\DefLabel{ass:reserve_gate}\label{ass:reserve_gate}
+\lbl{ass:reserve_gate} aliases \STE{} \lbl{ass:reservegate} without modification.
+\end{assumption}
+
+\begin{definition}[Certified rate process alias $\mu$]\DefLabel{def:certified_rate_mu}\label{def:certified_rate_mu}
+\lbl{def:certified_rate_mu} aliases \STE{} \lbl{def:mu}. \MTE{} may tighten uncertainty sets but \MUSTNOT{} alter \STE{} certified-rate semantics.
+\end{definition}
+
+\begin{definition}[Calibration bundle alias]\DefLabel{def:ste_calibration_bundle_alias}\label{def:ste_calibration_bundle_alias}
+\lbl{def:ste_calibration_bundle_alias} aliases \STE{} \lbl{def:calibration_bundle} and \lbl{ass:calibration}.
+\end{definition}
+
+\begin{definition}[STE reflection-budget alias]\DefLabel{def:ste_reflection_budget_alias}\label{def:ste_reflection_budget_alias}
+\lbl{def:ste_reflection_budget_alias} aliases \STE{} empirical-reflection and paraconsistent import interfaces
+(\lbl{ass:empref}, \lbl{prop:rejuvenation}, \lbl{ass:paraconsistent}, \lbl{thm:explosionproof}).
+\MTE{} treats reflection acceptance as read-only and only maps accepted STE risk artifacts into observability penalties.
+\end{definition}
+
+\begin{definition}[STE physical-envelope alias]\DefLabel{def:ste_physical_envelope_alias}\label{def:ste_physical_envelope_alias}
+\lbl{def:ste_physical_envelope_alias} aliases \STE{} substrate telemetry/envelope interfaces
+(\lbl{ass:thermal}, \lbl{ass:relativistic}, \lbl{ass:holo}, \lbl{thm:thermfront}, \lbl{prop:kugel}).
+\MTE{} does not redefine physical laws; it only defines observability-credit acceptance predicates over imported envelopes.
+\end{definition}
+
+\begin{assumption}[No-deception alias]\DefLabel{ass:no_deception_alias}\label{ass:no_deception_alias}
+\lbl{ass:no_deception_alias} aliases \STE{} non-domination/no-deception constraints
+(\lbl{ass:nondom}, \lbl{rem:no_deception}).
+No \MTE{} deniability or obfuscation rule may rely on false local realities or covert epistemic override channels.
+\end{assumption}
+
+\begin{theorem}[Anytime-valid auditing alias]\DefLabel{thm:anytime_valid_auditing}\label{thm:anytime_valid_auditing}
+For strict-credit claims, \MTE{} inherits \STE{} anytime-valid guarantees from \lbl{thm:anytime}; \MTE{} cannot weaken this guarantee.
+\end{theorem}
+
+\begin{theorem}[Paraconsistent Epistemic Isolation for Empirical Reflection]\DefLabel{thm:paraconsistent_epistemic_isolation}\label{thm:paraconsistent_epistemic_isolation}
+Empirical reflection in \MTE{} is constrained by \STE{} escrow/paraconsistent interfaces (notably \lbl{ass:paraconsistent} and \lbl{thm:explosionproof} in \STE{}): reflection outputs are typed as risk-bearing escrow objects and cannot directly modify strict-core safety invariants.
+\end{theorem}
+% ============================================================
+\section{Formal Setting: Uncertainty, Regularity, and Computability}\label{sec:formal}
+Let $\Et$ denote the set of explanations consistent with strict artifacts up to time $t$.
+
+\begin{definition}[Observable probability space]\DefLabel{def:observable_probability_space}\label{def:observable_probability_space}
+All stochastic claims in \MTE{} are interpreted on a pinned probability space $(\Omega,\mathcal{F},\Prob)$ with public filtration $\Filtration$ generated from strict artifacts.
+A random object is admissible in certified claims only if its measurability/adaptedness status relative to $\Filtration$ is declared and replay-verifiable.
+\end{definition}
+
+\begin{definition}[Audit-stochastic admissibility]\DefLabel{def:audit_stochastic_admissibility}\label{def:audit_stochastic_admissibility}
+An \MTE{} stochastic certificate is admissible only if it publishes:
+(i) integrability bounds for all used conditional expectations,
+(ii) stopping-time validity conditions for any adaptive rule,
+and (iii) the verifier identifier for the martingale/e-process calibration.
+Missing items fail closed.
+\end{definition}
+
+\begin{definition}[Canonical window artifact reducer]\DefLabel{def:canonical_window_artifact_reducer}\label{def:canonical_window_artifact_reducer}
+Let $\mathcal{L}$ be the append-only strict event log.
+For window $t$, define the canonical bundle $\mathcal{A}_t:=\mathsf{Reduce}(\mathcal{L},t)$ by:
+\begin{enumerate}
+\item filter events with \texttt{window\_id}=t and valid signature/hash/type checks;
+\item normalize all typed fields via pinned parser profile and unit profile;
+\item sort accepted events lexicographically by $(\texttt{timestamp},\texttt{event\_id},\texttt{canonical\_hash})$;
+\item for singleton event families, keep the unique maximal element under this order;
+\item for multiset event families, keep all elements as a hash-sorted list.
+\end{enumerate}
+If any required field is missing or typed normalization fails, $\mathsf{Reduce}$ returns \texttt{FAIL\_CLOSED}.
+\end{definition}
+
+\begin{theorem}[Canonical bundle determinism]\DefLabel{thm:canonical_bundle_determinism}\label{thm:canonical_bundle_determinism}
+For fixed parser/unit/signature profiles, Definition~\ref{def:canonical_window_artifact_reducer} yields a unique $\mathcal{A}_t$ for each window $t$.
+Hence all downstream quantities that are deterministic functions of $\mathcal{A}_t$ are replay-invariant.
+\end{theorem}
+
+\begin{definition}[Dual risk ledger]\DefLabel{def:dual_risk_ledger}\label{def:dual_risk_ledger}
+For each window $t$, define channel debits
+\[
+\alpha_{\mathrm{ref}}(t),\ \alpha_{\mathrm{avail}}(t),\ \alpha_{\mathrm{crypto}}(t),\ \alpha_{\mathrm{deni}}(t)\in[0,1]
+\]
+and define
+\[
+\alpha_{\Sigma}(t):=\alpha_{\mathrm{ref}}(t)+\alpha_{\mathrm{avail}}(t)+\alpha_{\mathrm{crypto}}(t)+\alpha_{\mathrm{deni}}(t).
+\]
+The window is admissible only if $\alpha_{\Sigma}(t)\le 1$.
+The reflection ledger debit $\erisk(t)$ is tied by a pinned map $\Phi_t$:
+\[
+\erisk(t)=\Phi_t\!\big(\alpha_{\mathrm{ref}}(t),\alpha_{\mathrm{avail}}(t),\alpha_{\mathrm{crypto}}(t),\alpha_{\mathrm{deni}}(t)\big),
+\]
+with envelopes
+\[
+\alpha_{\Sigma}(t)\le \erisk(t)\le 1.
+\]
+Any violation forces fail-closed credit on that window.
+\end{definition}
+
+\begin{definition}[Risk-penalty channel map]\DefLabel{def:risk_penalty_channel_map}\label{def:risk_penalty_channel_map}
+Each channel debit induces a nonnegative penalty contribution via pinned nondecreasing maps
+\[
+\psi_{\mathrm{ref}},\ \psi_{\mathrm{avail}},\ \psi_{\mathrm{crypto}},\ \psi_{\mathrm{deni}}:[0,1]\to\R_{\ge 0},\qquad \psi_j(0)=0.
+\]
+Define
+\[
+\PiRisk_t:=\psi_{\mathrm{ref}}(\alpha_{\mathrm{ref}}(t))+\psi_{\mathrm{avail}}(\alpha_{\mathrm{avail}}(t))+\psi_{\mathrm{crypto}}(\alpha_{\mathrm{crypto}}(t))+\psi_{\mathrm{deni}}(\alpha_{\mathrm{deni}}(t)).
+\]
+\end{definition}
+
+\begin{proposition}[Risk-penalty monotonicity]\DefLabel{prop:risk_penalty_monotonicity}\label{prop:risk_penalty_monotonicity}
+Under Definition~\ref{def:risk_penalty_channel_map}, increasing any channel debit while holding others fixed cannot decrease $\PiRisk_t$.
+\end{proposition}
+
+\begin{theorem}[Dual risk-ledger consistency]\DefLabel{thm:dual_risk_ledger_consistency}\label{thm:dual_risk_ledger_consistency}
+If each window satisfies Definition~\ref{def:dual_risk_ledger} and horizon policy enforces $\sum_t \erisk(t)\le \bar\epsilon$, then
+\[
+\sum_t \alpha_{\Sigma}(t)\le \sum_t \erisk(t)\le \bar\epsilon.
+\]
+Hence channel-wise false-acceptance accounting is conservatively dominated by the reflection risk ledger.
+\end{theorem}
+
+\begin{proposition}[Per-window probability coherence]\DefLabel{prop:dual_risk_probability_coherence}\label{prop:dual_risk_probability_coherence}
+If any window reports $\alpha_{\Sigma}(t)>1$ or $\erisk(t)\notin[0,1]$, the window is probability-incoherent and all credit-bearing claims on that window \MUST{} fail closed.
+\end{proposition}
+
+\begin{definition}[Conservative uncertainty set]\DefLabel{def:conservative_uncertainty_set}\label{def:conservative_uncertainty_set}
+A family $\widehat{\Et}$ is conservative if $\Et \subseteq \widehat{\Et}$ for all $t$ and $\widehat{\Et}$ is computable from strict artifacts under pinned verifiers.
+\end{definition}
+
+\begin{definition}[Auditable size functional]\DefLabel{def:size_functional}\label{def:size_functional}
+A size functional $S(\cdot)$ maps conservative uncertainty sets to $\R_{\ge 0}$ such that:
+(i) $S$ is computable from strict artifacts, (ii) $A\subseteq B \Rightarrow S(A)\le S(B)$, and
+(iii) $S$ upper bounds a relevant worst-case looseness term in certified inequalities.
+\end{definition}
+
+\begin{definition}[Localized regularization]\DefLabel{def:localized_regularization}\label{def:localized_regularization}
+A localized regularization partitions a conservative set into a non-singular core $\widehat{\Et}^{\mathrm{core}}$ and a singular boundary escrow $\partial\widehat{\Et}^{\mathrm{sing}}$, with pinned rules specifying which inferences may be credited on the core and how escrow mass is tracked conservatively.
+\end{definition}
+
+\begin{definition}[Computable localization]\DefLabel{def:computable_localization}\label{def:computable_localization}
+Computable localization is a pinned, budgeted procedure that constructs $\widehat{\Et}^{\mathrm{core}}$ and $\partial\widehat{\Et}^{\mathrm{sing}}$ without exact singular-boundary computation.
+It \MUST{} (i) use replay-verifiable sampling/sketches, (ii) treat uncertain regions as escrow (never as core), and (iii) certify explicit error bars and compute cost.
+\end{definition}
+
+\begin{assumption}[Regularity certificate]\DefLabel{ass:regularity_certificate}\label{ass:regularity_certificate}
+Each regime pins a regularity certificate that provides conservative local identifiability bounds on the computed core, flags degeneracy regions, and certifies that the localization procedure is computable within the regime's metrology budget.
+If the certificate cannot be verified, the default behavior is fail-closed for deductive regularity claims; however, Section~\ref{sec:reflection} defines an optional empirical reflection gate that permits limited progress under metered soundness risk.
+\end{assumption}
+
+\begin{definition}[Contraction response certificate]\DefLabel{def:contraction_response_certificate}\label{def:contraction_response_certificate}
+A contraction response certificate publishes replay-verifiable coefficients $(\kappa_t,\eta_t)$ with $\kappa_t>0,\eta_t\ge 0$ such that
+\[
+S\!\left(\widehat{\mathcal{E}_{t+1}}^{\mathrm{core}}\right)
+\le
+S\!\left(\widehat{\mathcal{E}_{t}}^{\mathrm{core}}\right)-\kappa_t\,\mathrm{ecr\_net}_t+\eta_t.
+\]
+The term $\eta_t$ is an explicit residual slack caused by finite-sample/modeling uncertainty.
+\end{definition}
+
+% ============================================================
+
+% --- Logic-Phase-Transition Addendum (Topos Translation) ---
+\begin{theorem}[Topos-Theoretic Paradigm Translation]\DefLabel{thm:topos_theoretic_translation}\label{thm:topos_theoretic_translation}
+When a Meta-Morphism Escrow (\lbl{prop:ontological_rupture_escrow}) implies a shift not only in models but also in the underlying logical substrate (e.g., from classical Boolean logic to intuitionistic logic or quantum orthomodular logic), the transition \MUST{} be formalized as a \emph{geometric morphism} between topoi.
+The Obs-Bridge \MUST{} pin a pair of adjoint functors $(f^\ast \dashv f_\ast)$ between the pre-rupture and post-rupture logical frameworks.
+
+Strict artifacts recorded in the pre-rupture topos are preserved as objects, but their evaluation in the post-rupture topos \MUST{} be performed via pullback through $f^\ast$.
+If the post-rupture topos lacks a subobject classifier compatible with \STE{}'s strict classical safety invariants, the system \MUST{} employ an explicit \emph{Decoherence Functor} $\mathsf{Dec}$ that projects post-rupture inferences into the classical \STE{} core as conservative approximations.
+The categorical interface follows standard topos-theoretic machinery \cite{MacLaneMoerdijk1994}.
+\end{theorem}
+
+\section{Proof-Theoretic Limits: Empirical Reflection}\label{sec:reflection}
+\begin{definition}[Soundness risk budget]\DefLabel{def:soundness_risk_budget}\label{def:soundness_risk_budget}
+A soundness risk budget $\erisk(t)\in[0,1]$ is the \MTE{}-scope projection of imported \STE{} reflection-risk artifacts (Definition~\ref{def:ste_reflection_budget_alias}) onto observability-credit channels.
+Risk budgets are scarce: exceeding budget forces fail-closed observability credit.
+\MTE{} implementations \MUST{} publish a replay-verifiable projection map from imported reflection artifacts to $(\alpha_{\mathrm{ref}},\PiRisk)$ and satisfy Definition~\ref{def:dual_risk_ledger}.
+\end{definition}
+
+\begin{definition}[Empirical reflection gate]\DefLabel{def:empirical_reflection_gate}\label{def:empirical_reflection_gate}
+An empirical reflection gate in \MTE{} is a read-only adapter over accepted \STE{} reflection events.
+For each reflected claim used by \MTE{}, the adapter \MUST{} publish:
+(i) the imported \STE{} event identifiers and verifier pins,
+(ii) the projected debit $\alpha_{\mathrm{ref}}(t)$ and penalty contribution $\PiRisk_t$,
+and (iii) the associated anytime-valid confidence artifact identifier.
+If the imported \STE{} reflection event is missing, invalid, or unverifiable, the \MTE{} gate output is $0$ (fail closed).
+\end{definition}
+
+\begin{theorem}[Empirical reflection against G\"odelian exhaustion]\DefLabel{thm:empirical_reflection_regularity}\label{thm:empirical_reflection_regularity}
+When deductive regularity proof search is unavailable within \MTE{} metrology budget, \MTE{} \MUSTNOT{} introduce a new reflection semantics.
+Instead, \MTE{} may consume only reflection events already accepted by imported \STE{} interfaces (Definition~\ref{def:ste_reflection_budget_alias}) through Definition~\ref{def:empirical_reflection_gate}.
+Any ECR credited under reflection is tagged risk-bearing and \MUST{} be discounted by projected debit $\alpha_{\mathrm{ref}}(t)$ while preserving fail-closed interface safety to \STE{}.
+\end{theorem}
+
+% ============================================================
+\section{Observability Capital: Exogeneity Without Self-Deception}\label{sec:capital}
+\subsection{Predictors as first-class regime objects}
+\begin{definition}[Predictor class]\DefLabel{def:predictor_class}\label{def:predictor_class}
+A predictor class $\mathcal{P}$ is a pinned family of prediction procedures (algorithms + resource bounds) used to define operational unpredictability relative to the public filtration.
+Changes to $\mathcal{P}$ are regime changes and require an obs-bridge.
+\end{definition}
+
+\begin{definition}[Predictor admissibility]\DefLabel{def:predictor_admissibility}\label{def:predictor_admissibility}
+A predictor class is admissible if it satisfies pinned minimum-strength constraints (e.g., includes a declared baseline class $\mathcal{P}_0$) and passes a dominance sanity check: it \MUSTNOT{} be strictly weaker than $\mathcal{P}_0$ on the regime's comparison interface.
+If admissibility cannot be certified, the regime is invalid for positive $\deltao$ (fail-closed).
+\end{definition}
+
+\subsection{Succinct verification and depth}
+\begin{definition}[Succinct proof]\DefLabel{def:succinct_proof}\label{def:succinct_proof}
+A succinct proof is a pinned proof object whose verification cost is bounded by $O(1)$ or $O(\log n)$ in the size of the underlying witness, and whose verification is deterministic and replay-verifiable from strict artifacts.
+\end{definition}
+
+\begin{definition}[Depth certificate]\DefLabel{def:depth_certificate}\label{def:depth_certificate}
+A depth certificate is a pinned artifact claiming a conservative lower bound on time-to-generate (or time-to-decompress from a short description) of a revealed value under a pinned stronger class $\mathcal{P}^+$, accompanied by a succinct proof (Definition~\ref{def:succinct_proof}) that the verification constraints hold.
+If no succinct proof is provided, the certificate is invalid for credit purposes.
+\end{definition}
+
+\begin{definition}[Structural exogeneity]\DefLabel{def:structural_exogeneity}\label{def:structural_exogeneity}
+Structural exogeneity is the portion of unpredictability that is not explainable as shallow maximum-entropy noise.
+Operationally, it is computed as a fail-closed functional of (i) min-entropy relative to $\mathcal{P}$ and (ii) a depth certificate relative to $\mathcal{P}^+$.
+\end{definition}
+
+\begin{definition}[Active intervention]\DefLabel{def:active_intervention}\label{def:active_intervention}
+An active intervention is a system-emitted, commitment-constrained perturbation to an interface or environment channel, recorded as a strict artifact, intended to probe causal response rather than passive correlation.
+\end{definition}
+
+\begin{definition}[Causal response certificate]\DefLabel{def:causal_response_certificate}\label{def:causal_response_certificate}
+A causal response certificate is a pinned, replay-verifiable witness that an intervention produced a response that (i) cannot be explained as conditioning on contemporaneous peers, and (ii) breaks pre-intervention statistical correlations on the comparison interface.
+\end{definition}
+
+\begin{definition}[Observation safety envelope]\DefLabel{def:observation_safety_envelope}\label{def:observation_safety_envelope}
+An observation safety envelope is a pinned budget rule limiting intervention energy, dissipation, and disturbance per window, tied to \STE{}'s reserve gate when applicable.
+Interventions that exceed the envelope invalidate any dependent credit claims (fail-closed).
+\end{definition}
+
+\begin{definition}[Ontological rupture detector]\DefLabel{def:ontological_rupture_detector}\label{def:ontological_rupture_detector}
+An ontological rupture detector is a pinned procedure that flags a candidate substrate/ontology phase transition when:
+(i) large unpredictability appears shallow under the current depth gate, and
+(ii) a persistent, macroscopic discontinuity simultaneously appears in the multiscale persistence spectrum across multiple independent witness domains.
+\end{definition}
+
+\begin{definition}[Meta-morphism escrow]\DefLabel{def:meta_morphism_escrow}\label{def:meta_morphism_escrow}
+A meta-morphism escrow is a regime update that isolates a detected rupture into a controlled transition: it pins an expanded predictor class $\mathcal{P}^{++}$ and translation interface sufficient to treat the discontinuity as a candidate singularity resolution rather than as noise, while fail-closing all unrelated exogeneity claims during the transition.
+\end{definition}
+
+\begin{definition}[Exogeneity budget]\DefLabel{def:exogeneity_budget}\label{def:exogeneity_budget}
+Exogeneity budget $E_{\mathrm{exo}}(t)$ meters structural exogeneity of revealed values relative to pre-commit filtration and an admissible predictor class $\mathcal{P}$.
+If commitment constraints, predictor admissibility, depth certificates, required causal response certificates, or the observation safety envelope are missing, the increment is $0$ (fail-closed).
+\end{definition}
+
+\begin{proposition}[Algorithmic depth gate for exogeneity]\DefLabel{prop:algorithmic_depth_gate}\label{prop:algorithmic_depth_gate}
+Admissible increments to $E_{\mathrm{exo}}$ \MUST{} be weighted by a valid depth certificate; shallow noise yields zero structural exogeneity even if unpredictable under $\mathcal{P}$.
+\end{proposition}
+
+\begin{proposition}[Ontological rupture and meta-morphism escrow]\DefLabel{prop:ontological_rupture_escrow}\label{prop:ontological_rupture_escrow}
+If the ontological rupture detector (Definition~\ref{def:ontological_rupture_detector}) fires, the system \MUST{} treat the event as a candidate ontology phase transition rather than as noise farming.
+The system \MUST{} suspend standard ``shallow-noise'' rejection on the flagged channel and instead require a meta-morphism escrow (Definition~\ref{def:meta_morphism_escrow}) to proceed.
+Until the escrow is verified, exogeneity credit on the affected channel is $0$ (fail-closed), while the discontinuity is preserved as an auditable singularity candidate for future resolution.
+\end{proposition}
+
+\begin{proposition}[Semantic Relic Freeze Across Ontological Ruptures]\DefLabel{prop:semantic_relic_freeze}\label{prop:semantic_relic_freeze}
+When an Ontological Rupture is confirmed (via Meta-Morphism Escrow, \lbl{prop:ontological_rupture_escrow}), capital accumulated under the obsolete predictor/ontology (e.g., $W$, $E_{\mathrm{exo}}$, and any ECR proxies pinned to the pre-rupture interface) becomes \emph{incommensurable} with the post-rupture substrate.
+To prevent epistemic money laundering, the system \MUST{} enact a \emph{Semantic Relic Freeze}:
+\begin{enumerate}
+\item Pre-rupture capital is archived as a historical relic and its \emph{active} contribution to new ECR is set to $0$ at the rupture boundary.
+\item Post-rupture ECR may only be minted from observables, witnesses, and certificates natively definable under the new predictor class (e.g., $\mathcal{P}^{++}$) and its associated Obs-Bridge.
+\item Any cross-era comparison \MUST{} proceed only through explicitly declared translation escrows, and \MUSTNOT{} reuse pre-rupture credit as collateral for post-rupture claims.
+\end{enumerate}
+This enforces conceptual hygiene across ontological phase transitions while retaining archivability for later historical study.
+\end{proposition}
+
+% --- Correspondence Principle Addendum (Prevents ontological money laundering) ---
+\begin{proposition}[Epistemic Correspondence Principle]\DefLabel{prop:epistemic_correspondence_principle}\label{prop:epistemic_correspondence_principle}
+Semantic Relic Freeze (\lbl{prop:semantic_relic_freeze}) archives pre-rupture capital. However, to validate a Meta-Morphism Escrow as a genuine scientific advance rather than ungrounded drift, the post-rupture predictor class $\mathcal{P}^{++}$ \MUST{} satisfy an \emph{Epistemic Correspondence Principle}.
+
+The system \MUST{} publish a succinct proof that, under a declared limit operator $\mathsf{Lim}$ (e.g., low-energy limit, macro-scale coarse-graining, bounded-compute projection), the predictive outputs of $\mathcal{P}^{++}$ asymptotically recover the validated predictions of the obsolete class $\mathcal{P}$ up to a pinned bounded error $\epsilon_{\mathrm{corr}}$:
+\[
+\forall x \in \mathcal{X}_{\mathrm{corr}}:\quad d\!\left(\mathsf{Lim}(\mathcal{P}^{++}(x)),\, \mathcal{P}(x)\right) \le \epsilon_{\mathrm{corr}}.
+\]
+Without a correspondence proof, the rupture is classified as \emph{ungrounded ontological drift}, and positive $\delta_o$ generation in the new regime \MUST{} be rejected (fail-closed).
+\end{proposition}
+
+\begin{theorem}[Active causal-depth gate for structural exogeneity]\DefLabel{thm:active_causal_depth_gate}\label{thm:active_causal_depth_gate}
+Positive $\deltao$ regimes \MUST{} require active interventions and causal response certificates for credited exogeneity, and \MUST{} enforce an observation safety envelope.
+If causal response certification fails, exogeneity contribution is $0$ (fail-closed).
+\end{theorem}
+
+\begin{theorem}[Simulation-breaking intervention via irreducible resource exhaustion]\DefLabel{thm:simulation_breaking_intervention}\label{thm:simulation_breaking_intervention}
+To defend against lazy-evaluation meta-simulators that render deep responses on demand, the system \MAY{} employ a computational exhaustion probe: an intervention that forces evaluation of a pinned computationally irreducible process with certified lower bounds on time/energy density, while staying within the observation safety envelope \cite{BennettDepth}.
+If the environment produces causally consistent responses faster than pinned lower bounds allow for a hypothesized simulator substrate, the probe yields certified inconsistency with that simulator hypothesis; if it induces observable latency/glitch signatures, it yields a certified resource-bound fingerprint.
+Exogeneity is credited only insofar as it improves conservative uncertainty contraction (drives ECR), preventing noise farming.
+\end{theorem}
+
+\subsection{Witness and interface capital}
+\begin{definition}[Witness capital]\DefLabel{def:witness_capital}\label{def:witness_capital}
+Witness capital $W(t)$ is a conservative lower bound on effective independent witness capacity computed from active witness domains, telemetry, and correlation/capture diagnostics.
+Missing or unverifiable diagnostics force $W(t)=0$.
+\end{definition}
+
+\begin{definition}[Page-limit discount]\DefLabel{def:page_limit_discount}\label{def:page_limit_discount}
+A Page-limit discount is a pinned function $D_{\mathrm{Page}}(t)\in[0,1]$ that monotonically decreases with an auditable proxy for cosmological entanglement saturation within the system's causal horizon.
+Effective witness capital is $W_{\mathrm{eff}}(t):=D_{\mathrm{Page}}(t)\cdot W(t)$.
+\end{definition}
+
+\begin{definition}[Interface capital]\DefLabel{def:interface_capital}\label{def:interface_capital}
+Interface capital $I(t)$ is a conservative measure of the capacity to convert observations into strict artifacts under pinned verifiers and calibration bundles.
+Missing pins or calibration artifacts force $I(t)=0$.
+\end{definition}
+
+\begin{definition}[Grounding ratio]\DefLabel{def:grounding_ratio}\label{def:grounding_ratio}
+Define $\Rg(t):=\frac{E_{\mathrm{exo}}(t)}{1+I(t)}$.
+\end{definition}
+
+\begin{proposition}[Anti-solipsism ratio]\DefLabel{prop:anti_solipsism_ratio}\label{prop:anti_solipsism_ratio}
+If $\liminf_{t\to\infty} \Rg(t)=0$ under admissible predictors, contraction driven primarily by interface-internal structure is indistinguishable from solipsistic self-confirmation under observable-only auditing.
+Therefore, admissibility of positive observability credit requires a certified lower bound $\Rg(t)\ge \gground>0$ on the credited window; otherwise $\deltao(t)=0$.
+\end{proposition}
+
+% ============================================================
+\section{Cosmological Independence Depletion: The Page Limit}\label{sec:page}
+\begin{theorem}[Cosmological entanglement saturation (the Page limit)]\DefLabel{thm:page_limit_entanglement_saturation}\label{thm:page_limit_entanglement_saturation}
+Over cosmological horizons, repeated interaction and observation entangles the system with the degrees of freedom within its causal horizon.
+In finite effective Hilbert spaces, the available reservoir of unentangled, independent witness states must saturate; marginal independence supply decays \cite{Page1993AverageEntropy}.
+Therefore, regimes that treat witness independence as a renewable resource \MUST{} incorporate a Page-limit discount (Definition~\ref{def:page_limit_discount}) computed from an auditable saturation proxy (e.g., a conservative ratio of accumulated entanglement entropy proxy to an upper bound on horizon entropy).
+As saturation approaches the pinned threshold, the protocol \MUST{} deterministically damp ECR contributions attributable to new witnesses and shift to bounded epistemic maintenance rather than unlimited identifiability expansion.
+\end{theorem}
+
+% ============================================================
+\section{Obs-Bridge: Epistemic Connections, Holonomy, and Singularity Resolution}\label{sec:bridge}
+\begin{definition}[Observability regime]\DefLabel{def:observability_regime}\label{def:observability_regime}
+An observability regime is an epoch-frozen specification of: witness/exogeneity/interface definitions, predictor classes $\mathcal{P},\mathcal{P}^+$ (and optional $\mathcal{P}^{++}$), proxy families and verifiers, computable localization, and required certificates (regularity or reflection, fragmentation, depth, causal-response, safety envelope, and when needed rupture/connection constraints).
+\end{definition}
+
+\begin{definition}[Overlap observables]\DefLabel{def:overlap_observables}\label{def:overlap_observables}
+Overlap observables are strict artifacts computable under both regimes and designated as the basis for comparability bounds and dominance tests.
+\end{definition}
+
+\begin{definition}[Morphism escrow]\DefLabel{def:morphism_escrow}\label{def:morphism_escrow}
+A morphism escrow is a pinned translation interface mapping strict artifacts under a new regime into an approximate surrogate comparison interface of an older regime, with auditable structural error bound $\estr$.
+\end{definition}
+
+\begin{definition}[Epistemic connection]\DefLabel{def:epistemic_connection}\label{def:epistemic_connection}
+An epistemic connection is a pinned assignment of translation morphisms to directed edges of a regime-transition graph.
+Composition along a path defines a generally non-commutative transport of strict artifacts between regimes.
+\end{definition}
+
+\begin{definition}[Holonomy element]\DefLabel{def:holonomy_element}\label{def:holonomy_element}
+For a loop in the transition graph, the holonomy element is the composite transport around the loop.
+Nontrivial holonomy captures path-dependent semantic drift even when endpoints coincide.
+\end{definition}
+
+\begin{definition}[Flatness certificate]\DefLabel{def:flatness_certificate}\label{def:flatness_certificate}
+A flatness certificate is a pinned, replay-verifiable artifact that bounds holonomy on a declared local subgraph: all certified small-loop holonomies are identity (or lie within a pinned tolerance class) on the comparison interface.
+\end{definition}
+
+\begin{definition}[Escrow chain horizon cutoff]\DefLabel{def:escrow_chain_horizon_cutoff}\label{def:escrow_chain_horizon_cutoff}
+A regime declares $\kmax$ such that claims referencing paradigms older than $\kmax$ transitions are treated as non-comparable unless supported by certified transport and, when required, a flatness certificate, within the metrology compute budget.
+\end{definition}
+
+\begin{theorem}[Non-abelian paradigm holonomy and flat epistemic connections]\DefLabel{thm:non_abelian_paradigm_holonomy}\label{thm:non_abelian_paradigm_holonomy}
+In nonlinear moduli spaces, translation transports are generally non-commutative, so path dependence (holonomy) cannot be reduced to a single scalar chain error.
+Therefore, admissible ECR accumulation across paradigm transitions \MUST{} be conditioned on a flatness certificate on the local transition subgraph used for credit-bearing comparability.
+If flatness cannot be certified, cross-regime comparability is restricted to explicitly declared overlap scopes (or fails closed), and no implicit global comparability is claimed.
+\end{theorem}
+
+\begin{theorem}[Semi-decidable acceptance of long-horizon transport]\DefLabel{thm:escrow_bound_semi_decidable}\label{thm:escrow_bound_semi_decidable}
+Since exact global transport bounds can be intractable or undecidable, long-horizon comparability is treated as semi-decidable:
+if the required transport certificates (escrow + flatness where applicable) are provided within budget, they are accepted; otherwise the horizon is disallowed for credit-bearing comparability (without asserting falsity) and the system proceeds with local comparability only.
+\end{theorem}
+
+\begin{theorem}[Flatness-over-anchor policy]\DefLabel{thm:flatness_over_anchor_policy}\label{thm:flatness_over_anchor_policy}
+When ancient-anchor comparability becomes ontologically ill-defined, the system \MUSTNOT{} force category-mistake comparisons.
+Instead, the system \MUST{} prefer flatness certificates on locally relevant transition subgraphs.
+Anchors may be used as optional convenience baselines when comparability is well-defined, but they are not a universal requirement.
+\end{theorem}
+
+\begin{theorem}[Resolution of singular escrow via epistemic blow-up]\DefLabel{thm:resolution_of_singular_escrow}\label{thm:resolution_of_singular_escrow}
+A valid obs-bridge may resolve regions previously classified as singular escrow.
+If the new regime's regularity certificate (or reflection-gated estimate) verifiably maps a subset of historical singular escrow into the new non-singular core with strictly positive local identifiability bounds, then the system \MAY{} execute epistemic rehydration: it selectively re-evaluates the mapped subset using the new proxy family and credits only new ECR evidence accumulated under the new regime (no retroactive credit).
+\end{theorem}
+
+% ============================================================
+\section{Proxy Governance: Multiscale Persistence and Anti-Chattering}\label{sec:proxies}
+\begin{definition}[Proxy similarity metric]\DefLabel{def:proxy_similarity_metric}\label{def:proxy_similarity_metric}
+A proxy similarity metric is a pinned, replay-verifiable measure of informational redundancy between proxy categories.
+\end{definition}
+
+\begin{definition}[Multiscale persistence spectrum]\DefLabel{def:multiscale_persistence_spectrum}\label{def:multiscale_persistence_spectrum}
+A multiscale persistence spectrum is a pinned summary of persistent homology barcodes computed across multiple window lengths and filtration scales, yielding persistence lifetimes for proxy clusters at each scale \cite{Edelsbrunner2002,Ghrist2008}.
+\end{definition}
+
+\begin{definition}[Persistent proxy clusters]\DefLabel{def:persistent_proxy_clusters}\label{def:persistent_proxy_clusters}
+Persistent proxy clusters are equivalence classes of proxies recognized as independent only if they persist across at least $\Lms$ multiscale levels and exceed pinned hysteresis thresholds for both entry and exit.
+\end{definition}
+
+\begin{definition}[Proxy orthogonal basis]\DefLabel{def:proxy_orthogonal_basis}\label{def:proxy_orthogonal_basis}
+An orthogonal proxy basis is a clustering/projection of proxy categories into $\Neff$ effective votes such that highly redundant proxies contribute at most one effective vote.
+\end{definition}
+
+\begin{theorem}[Multiscale persistent proxy orthogonalization]\DefLabel{thm:multiscale_persistent_proxy_orthogonalization}\label{thm:multiscale_persistent_proxy_orthogonalization}
+To prevent fractal and long-period chattering, orthogonalization \MUST{} be gated by a multiscale persistence spectrum.
+A cluster counts as an independent effective vote only if its persistence exceeds a pinned threshold on at least $\Lms$ distinct window scales, and membership changes are subject to cooldown hysteresis.
+\end{theorem}
+
+\begin{proposition}[Orthogonalization rule]\DefLabel{prop:proxy_orthogonalization}\label{prop:proxy_orthogonalization}
+The system \MUSTNOT{} count proxy categories uniformly.
+Active proxies \MUST{} be projected into a multiscale persistence-gated orthogonal basis (Theorem~\ref{thm:multiscale_persistent_proxy_orthogonalization}), yielding $\Neff$; Byzantine thresholds apply to $\Neff$.
+\end{proposition}
+
+\begin{definition}[Fragmentation certificate]\DefLabel{def:fragmentation_certificate}\label{def:fragmentation_certificate}
+A fragmentation certificate is a pinned artifact providing conservative computable bounds on emptiness/fragmentation risk for the proxy-aggregated uncertainty set and tractable surrogates for $S(\cdot)$.
+\end{definition}
+
+\begin{definition}[Fractional intersection]\DefLabel{def:fractional_intersection}\label{def:fractional_intersection}
+Let $\Neff$ effective proxy votes be active with declared capture fraction $\fcap\in[0,1/2)$.
+Define $\widehat{\Et}^{\star}$ as the set of explanations supported by at least $\lceil (1-\fcap)\Neff\rceil$ effective proxies.
+\end{definition}
+
+\begin{proposition}[Byzantine-resilient proxy intersection]\DefLabel{prop:byzantine_resilient_proxy_intersection}\label{prop:byzantine_resilient_proxy_intersection}
+Under anytime-valid proxies and $\fcap<1/2$, fractional intersection prevents a single poisoned effective proxy from forcing deadlock, while remaining conservative as long as at least $\lceil (1-\fcap)\Neff\rceil$ effective proxy votes remain sound.
+\end{proposition}
+
+\begin{proposition}[Topological fragmentation guard]\DefLabel{prop:topological_fragmentation_guard}\label{prop:topological_fragmentation_guard}
+If the proxy-aggregated uncertainty set is empty, or if a valid fragmentation certificate is unavailable, or if certified fragmentation complexity exceeds a pinned threshold, then $\mathrm{ECR}(t)$ and hence $\deltao(t)$ must be set to $0$.
+\end{proposition}
+
+\begin{proposition}[Information cascade decoupling]\DefLabel{prop:cascade_decoupling}\label{prop:cascade_decoupling}
+Witness updates contributing to proxies \MUST{} use strictly private commit phases with synchronized reveals.
+Proxy alignment explained primarily by reveal-order conditioning is classified as an information cascade \cite{Bikhchandani1992,Banerjee1992} and its marginal contribution to ECR is computed as $0$.
+\end{proposition}
+
+\begin{proposition}[Monogamy stress tests for nonlocal coordination]\DefLabel{prop:entanglement_monogamy_witness}\label{prop:entanglement_monogamy_witness}
+In extreme high-threat regimes where quantum nonlocal coordination is plausible, the system \MUST{} incorporate Bell-type nonlocality stress tests as strict artifacts \cite{Bell1964,CHSH1969}.
+If such tests are unavailable or fail to bound nonlocal correlation risk, then $W(t)$ must be conservatively discounted.
+\end{proposition}
+
+% ============================================================
+\section{ECR and Observability Credit}\label{sec:ecr}
+\begin{definition}[Equivalence-class collapse rate (ECR)]\DefLabel{def:ecr}\label{def:ecr}
+ECR is a fail-closed functional $\mathrm{ECR}(t)\in\R_{\ge 0}$ computed from pinned proxy outputs, multiscale persistence-gated orthogonalization, cascade diagnostics, certified surrogates, and transport validity (escrow/flatness as required), subject to fragmentation/cascade guards.
+\end{definition}
+
+\begin{definition}[Observability credit]\DefLabel{def:observability_credit}\label{def:observability_credit}
+Observability credit $\deltao(t)$ is computed as a fail-closed function of:
+ECR, verified regularity or imported reflection-gated estimates, predictor admissibility and depth certificates (with succinct proofs), required causal response certificates, the observation safety envelope, grounding ratio $\Rg(t)\ge \gground$, fragmentation/cascade diagnostics, transport validity, Page-limit discount, social-endogeneity discount, and no-deception-compatible policy constraints on deniability channels.
+\end{definition}
+
+\begin{definition}[Gate-vector schema]\DefLabel{def:gate_vector_schema}\label{def:gate_vector_schema}
+Each $\mathsf{ECRKernel}_t$ report \MUST{} publish a canonical gate vector
+\[
+\mathbf{g}^{\star}_t=(g^{\mathrm{pred}}_t,g^{\mathrm{depth}}_t,g^{\mathrm{causal}}_t,g^{\mathrm{safety}}_t,g^{\mathrm{frag}}_t,g^{\mathrm{transport}}_t,g^{\mathrm{frame}}_t,g^{\mathrm{avail}}_t,g^{\mathrm{fresh}}_t,g^{\mathrm{overhead}}_t)\in\{0,1\}^{10},
+\]
+and the aggregate gate is
+\[
+\mathbf{g}_t=\prod_{j=1}^{10} g^{(j)}_t.
+\]
+Any missing component or canonicalization mismatch forces $\mathbf{g}_t=0$.
+\end{definition}
+
+\begin{definition}[Gate-bit decision rules]\DefLabel{def:gate_bit_decision_rules}\label{def:gate_bit_decision_rules}
+Let $\mathcal{A}_t$ be the canonical strict-artifact bundle for window $t$.
+The gate bits are deterministic predicates:
+\begin{align*}
+g^{\mathrm{pred}}_t&=1 \iff \mathcal{A}_t \text{ contains a valid } \texttt{PREDICTOR\_ADMISSIBILITY\_CERT},\\
+g^{\mathrm{depth}}_t&=1 \iff \mathcal{A}_t \text{ contains a valid } \texttt{DEPTH\_CERT\_UPDATE},\\
+g^{\mathrm{causal}}_t&=1 \iff \mathcal{A}_t \text{ contains matched } \texttt{CAUSAL\_INTERVENTION}/\texttt{CAUSAL\_RESPONSE\_CERT},\\
+g^{\mathrm{safety}}_t&=1 \iff \mathcal{A}_t \text{ contains a valid } \texttt{SAFETY\_ENVELOPE\_PIN}\text{ and envelope pass},\\
+g^{\mathrm{frag}}_t&=1 \iff \mathcal{A}_t \text{ contains a valid } \texttt{FRAGMENTATION\_CERT}\text{ with non-empty admissible set},\\
+g^{\mathrm{transport}}_t&=1 \iff \mathcal{A}_t \text{ contains required transport/flatness certificates for used regime path},\\
+g^{\mathrm{frame}}_t&=1 \iff \mathcal{A}_t \text{ contains a valid } \texttt{FRAME\_INVARIANCE\_CERT}\text{ on credited channels},\\
+g^{\mathrm{avail}}_t&=1 \iff \mathcal{A}_t \text{ contains successful } \texttt{DAS\_SAMPLE}\text{ and required availability proofs},\\
+g^{\mathrm{fresh}}_t&=1 \iff \mathcal{A}_t \text{ contains unexpired } \texttt{FRESHEN\_EPOCH}\text{ coverage for used proofs},\\
+g^{\mathrm{overhead}}_t&=1 \iff \mathcal{A}_t \text{ contains } \texttt{OVERHEAD\_REPORT}\text{ with budget compliance}.
+\end{align*}
+If any predicate is undefined due to missing typed fields or parser mismatch, it evaluates to $0$.
+\end{definition}
+
+\begin{theorem}[Gate-vector completeness and determinism]\DefLabel{thm:gate_vector_completeness}\label{thm:gate_vector_completeness}
+Assume Definition~\ref{def:canonical_window_artifact_reducer} and Definition~\ref{def:gate_bit_decision_rules}.
+Then $\mathbf{g}_t=1$ if and only if all mandatory gate predicates are true on the unique reduced bundle $\mathcal{A}_t$.
+Hence $\deltao(t)$ is replay-computable as a deterministic function of canonical strict artifacts.
+\end{theorem}
+
+\begin{definition}[Net ECR signal]\DefLabel{def:ecr_net}\label{def:ecr_net}
+For each window $t$, define
+\[
+\mathrm{ecr\_net}_t:=\max\{0,\ \mathrm{ecr\_raw}_t-\PiBridge_t-\PiRisk_t-\PiPhys_t\}.
+\]
+\end{definition}
+
+\begin{definition}[Replay kernel for ECR]\DefLabel{def:ecr_replay_kernel}\label{def:ecr_replay_kernel}
+For each window $t$, define a deterministic replay kernel
+\[
+\mathsf{ECRKernel}_t:\mathcal{A}_t\mapsto (\mathrm{ecr\_raw}_t,\mathrm{ecr\_net}_t,\PiBridge_t,\PiRisk_t,\PiPhys_t,\mathbf{g}_t),
+\]
+where $\mathcal{A}_t$ is obtained from Definition~\ref{def:canonical_window_artifact_reducer},
+$\mathrm{ecr\_raw}_t\ge 0$ is the certified raw collapse signal,
+$\mathrm{ecr\_net}_t$ follows Definition~\ref{def:ecr_net},
+$\PiRisk_t$ follows Definition~\ref{def:risk_penalty_channel_map},
+$\PiBridge_t,\PiPhys_t\ge 0$ are bridge/holonomy and physical penalties,
+and $\mathbf{g}_t\in\{0,1\}$ is the gate indicator.
+\end{definition}
+
+\begin{definition}[Operational $\deltao$ operator]\DefLabel{def:deltao_operator}\label{def:deltao_operator}
+Let $(\mathrm{ecr\_raw}_t,\mathrm{ecr\_net}_t,\PiBridge_t,\PiRisk_t,\PiPhys_t,\mathbf{g}_t)=\mathsf{ECRKernel}_t(\mathcal{A}_t)$.
+Define
+\[
+\deltao(t):=\mathbf{g}_t\cdot \mathrm{ecr\_net}_t.
+\]
+This equation is the authoritative executable form of \lbl{def:observability_credit}. If any required artifact is missing, then $\mathbf{g}_t=0$ and $\deltao(t)=0$.
+\end{definition}
+
+\begin{proposition}[ECR kernel algebraic consistency]\DefLabel{prop:ecr_kernel_algebraic_consistency}\label{prop:ecr_kernel_algebraic_consistency}
+For any accepted \texttt{ECR\_KERNEL\_REPORT}, the reported value must satisfy
+\[
+\mathrm{ecr\_net}_t=\max\{0,\mathrm{ecr\_raw}_t-\PiBridge_t-\PiRisk_t-\PiPhys_t\}.
+\]
+Any mismatch forces fail-closed evaluation ($\mathbf g_t=0$, $\deltao(t)=0$) on that window.
+\end{proposition}
+
+\begin{proposition}[Bridge-holonomy cumulative distortion bound]\DefLabel{prop:bridge_holonomy_cumulative_bound}\label{prop:bridge_holonomy_cumulative_bound}
+Fix a horizon $[t_0,t_1)$. Let $\beta_t$ be \STE{} bridge distortion on metric amendments and $h_t$ the declared local holonomy tolerance used by \MTE{} transport certificates.
+Then admissible observability-creditable contraction on that horizon is upper-bounded by the total transport distortion
+\[
+\sum_{t=t_0}^{t_1-1}(\beta_t+h_t),
+\]
+in the sense that any claimed contraction improvement beyond this bound is non-credit-bearing unless additional overlap artifacts close the gap.
+\end{proposition}
+
+\begin{theorem}[Compositional soundness-risk bound]\DefLabel{thm:risk_budget_composition}\label{thm:risk_budget_composition}
+Suppose each window declares nonnegative risk debits
+\[
+\alpha_{\mathrm{ref}}(t),\ \alpha_{\mathrm{avail}}(t),\ \alpha_{\mathrm{crypto}}(t),\ \alpha_{\mathrm{deni}}(t),
+\]
+respectively for empirical-reflection acceptance, data-availability acceptance, cryptographic-freshness acceptance, and deniability-audit acceptance.
+If a horizon policy enforces
+\[
+\sum_t \alpha_{\mathrm{ref}}(t)+\sum_t \alpha_{\mathrm{avail}}(t)+\sum_t \alpha_{\mathrm{crypto}}(t)+\sum_t \alpha_{\mathrm{deni}}(t)\le \alpha_{\mathrm{tot}},
+\]
+then the probability of at least one false acceptance event among these channels is at most $\alpha_{\mathrm{tot}}$.
+\end{theorem}
+
+\begin{proof}[Proof of Theorem~\ref{thm:risk_budget_composition}]
+By channel-wise calibration, each channel contributes at most its declared risk debit to false acceptance.
+A union bound across channels and windows yields the stated global bound.
+\end{proof}
+
+\begin{theorem}[Coupled credit supermartingale law]\DefLabel{thm:coupled_credit_supermartingale}\label{thm:coupled_credit_supermartingale}
+Define cumulative credits
+\[
+\Zs(t):=\sum_{u\le t}\deltas(u),\qquad \Zo(t):=\sum_{u\le t}\deltao(u),
+\]
+and cumulative penalties
+\[
+\PiRisk(t):=\sum_{u\le t}\PiRisk_u,\quad \PiBridge(t):=\sum_{u\le t}\PiBridge_u,\quad \PiPhys(t):=\sum_{u\le t}\PiPhys_u.
+\]
+For fixed $\lambda\in[0,1]$, define the coupled process
+\[
+\Vcouple_t:=\Zs(t)+\lambda \Zo(t)-\PiRisk(t)-\PiBridge(t)-\PiPhys(t).
+\]
+If replay calibration certifies
+\[
+\mathbb{E}[\deltas(t+1)+\lambda\deltao(t+1)\mid\mathcal{F}_t]
+\le
+\mathbb{E}[\PiRisk_{t+1}+\PiBridge_{t+1}+\PiPhys_{t+1}\mid\mathcal{F}_t]
+\]
+under the null ``no net genuine progress'', and all terms satisfy Definition~\ref{def:audit_stochastic_admissibility}, then $(\Vcouple_t)_{t\ge 0}$ is a supermartingale.
+\end{theorem}
+
+\begin{proof}[Proof of Theorem~\ref{thm:coupled_credit_supermartingale}]
+Take conditional expectations of increments
+\[
+\Vcouple_{t+1}-\Vcouple_t
+=
+\deltas(t+1)+\lambda\deltao(t+1)-\PiRisk_{t+1}-\PiBridge_{t+1}-\PiPhys_{t+1}.
+\]
+Definition~\ref{def:audit_stochastic_admissibility} ensures all conditional expectations are well-defined. The stated calibration inequality implies
+$\mathbb{E}[\Vcouple_{t+1}-\Vcouple_t\mid\mathcal{F}_t]\le 0$, hence supermartingale property.
+\end{proof}
+
+\begin{theorem}[Constructive kernel-to-test-supermartingale lift]\DefLabel{thm:kernel_to_test_supermartingale_lift}\label{thm:kernel_to_test_supermartingale_lift}
+Assume Definition~\ref{def:observable_probability_space} and Definition~\ref{def:audit_stochastic_admissibility}.
+For each $t$, define
+\[
+X_t:=\deltas(t)+\lambda_t\deltao(t)-\PiRisk_t-\PiBridge_t-\PiPhys_t,
+\]
+with predictable $\lambda_t\in[0,1]$.
+If a replay-verifiable MGF calibration certificate provides $\eta_t>0$ such that
+\[
+\Expect[\exp(\eta_t X_t)\mid\mathcal{F}_{t-1}] \le 1,
+\]
+then
+\[
+M_t:=\prod_{u=1}^{t}\exp(\eta_u X_u),\qquad M_0:=1,
+\]
+is a nonnegative test supermartingale.
+\end{theorem}
+
+\begin{corollary}[Coupled false-acceptance control]\DefLabel{cor:coupled_false_accept_bound}\label{cor:coupled_false_accept_bound}
+If $\exp(\eta\Vcouple_t)$ is calibrated as a nonnegative test supermartingale for some $\eta>0$ (or constructed via Theorem~\ref{thm:kernel_to_test_supermartingale_lift}), then any stopping rule satisfies
+\[
+\Pr\!\left(\sup_t \Vcouple_t \ge \frac{1}{\eta}\log\frac{1}{\alpha}\right)\le \alpha,
+\]
+providing anytime error control for joint \STE{}-\MTE{} over-crediting decisions \cite{HowardEtAl2020}.
+\end{corollary}
+
+\begin{proposition}[Adaptive witness allocation under submodularity]\DefLabel{prop:adaptive_witness_submodular}\label{prop:adaptive_witness_submodular}
+Let $F_t(S)$ be the expected one-window ECR gain from activating witness subset $S$, under a declared budgeted intervention policy.
+If $F_t$ is monotone submodular, then under a cardinality budget the standard greedy policy achieves at least $(1-1/e)$ of the optimal ECR gain \cite{NemhauserWolseyFisher1978}.
+For heterogeneous costs (knapsack budgets), the deployment profile \MUST{} declare the concrete approximation algorithm and its certified ratio $\rho\in(0,1]$, and credited gains on that channel are conservatively scaled by $\rho$.
+This yields a replay-verifiable witness allocation rule with an explicit worst-case approximation guarantee.
+\end{proposition}
+
+\begin{definition}[Witness dependence graph and effective independence]\DefLabel{def:witness_dependence_graph}\label{def:witness_dependence_graph}
+For window $t$, let $G_t^{\mathrm{wit}}=(V_t,E_t,w_t)$ be a replay-constructed graph of active witness domains:
+nodes are witnesses, edge weights $w_t(i,j)\in[0,1]$ encode conservative dependence/capture risk.
+For threshold $\tau$, define $\alpha_t(\tau)$ as the maximum weighted fraction of witnesses inside any $\tau$-dense dependence cluster.
+Effective independent capacity is
+\[
+W_{\mathrm{ind}}(t):=\big(1-\alpha_t(\tau)\big)\,W_{\mathrm{eff}}(t).
+\]
+\end{definition}
+
+\begin{definition}[Dynamic witness dependence process]\DefLabel{def:dynamic_witness_dependence_process}\label{def:dynamic_witness_dependence_process}
+Let $\alpha_t:=\alpha_t(\tau)$ from Definition~\ref{def:witness_dependence_graph}.
+The dependence process is declared with drift envelope parameters $(\nu,L_{\mathrm{lag}})$ such that
+\[
+\alpha_t \le \alpha_{t-1}+\nu,\qquad \nu\ge 0,
+\]
+and the verifier updates the certified bound at least once every $L_{\mathrm{lag}}$ windows.
+This models adaptive collusion/Sybil reconfiguration under bounded update latency.
+\end{definition}
+
+\begin{proposition}[Sybil/collusion-resilient witness lower bound]\DefLabel{prop:sybil_collusion_witness_bound}\label{prop:sybil_collusion_witness_bound}
+If witness-cluster diagnostics certify $\alpha_t(\tau)\le \bar{\alpha}<1$, then credited witness capacity \MUST{} satisfy
+\[
+W_{\mathrm{credit}}(t)\le W_{\mathrm{ind}}(t)\le (1-\bar{\alpha})W_{\mathrm{eff}}(t).
+\]
+Thus any attempt to inflate witness counts through Sybil splitting or collusive dependence can increase raw counts but cannot increase credited independence beyond the certified cap.
+\end{proposition}
+
+\begin{theorem}[Dynamic collusion lag bound]\DefLabel{thm:dynamic_collusion_lag_bound}\label{thm:dynamic_collusion_lag_bound}
+Under Definition~\ref{def:dynamic_witness_dependence_process}, if the last certified bound at update time $u$ is $\alpha_u\le \bar\alpha$, then for any
+$t\in[u,u+L_{\mathrm{lag}}]$:
+\[
+\alpha_t \le \bar\alpha+\nu (t-u)\le \bar\alpha+\nu L_{\mathrm{lag}}.
+\]
+Therefore a conservative online bound is
+\[
+W_{\mathrm{credit}}(t)\le \big(1-\bar\alpha-\nu L_{\mathrm{lag}}\big)_+\,W_{\mathrm{eff}}(t),
+\]
+where $(x)_+:=\max\{0,x\}$.
+\end{theorem}
+
+\begin{definition}[Social-institutional endogeneity process]\DefLabel{def:social_endogeneity_process}\label{def:social_endogeneity_process}
+Let $\chi_t\in[0,1]$ be a certified endogeneity pressure proxy (institutional capture, conformity pressure, or correlated fear response) computed from declared social telemetry and witness-domain governance artifacts.
+Define socially corrected witness capacity
+\[
+W_{\mathrm{soc}}(t):=(1-\chi_t)\,W_{\mathrm{credit}}(t).
+\]
+If $\chi_t$ is missing or uncertified, set $\chi_t=1$ (fail closed).
+\end{definition}
+
+\begin{theorem}[Endogeneity discount bound]\DefLabel{thm:endogeneity_discount_bound}\label{thm:endogeneity_discount_bound}
+Under Definition~\ref{def:social_endogeneity_process}, credited witness contribution to ECR on window $t$ must be upper-bounded using $W_{\mathrm{soc}}(t)$.
+Hence even with favorable graph-based independence diagnostics, rising institutional endogeneity $\chi_t$ monotonically suppresses witness-derived observability credit and can force it to zero as $\chi_t\to 1$.
+\end{theorem}
+
+\begin{theorem}[Risk-budgeted optional stopping for coupled credits]\DefLabel{thm:risk_budgeted_optional_stopping}\label{thm:risk_budgeted_optional_stopping}
+Let $(M_t)_{t\ge 0}$ be a nonnegative test supermartingale adapted to $\Filtration$, with $M_0=1$, calibrated for joint over-crediting decisions under the coupled process in Theorem~\ref{thm:coupled_credit_supermartingale}.
+Let $\tau$ be any stopping time measurable with respect to strict artifacts.
+Then
+\[
+\Pr\!\left(\sup_{t\ge 0} M_t\ge \frac{1}{\alpha}\right)\le \alpha,\qquad
+\Pr\!\left(M_{\tau}\ge \frac{1}{\alpha}\right)\le \alpha.
+\]
+Hence adaptive halt/continue policies do not violate the declared global false-acceptance budget.
+\end{theorem}
+
+\begin{proposition}[Parser determinism invariance]\DefLabel{prop:parser_determinism_invariance}\label{prop:parser_determinism_invariance}
+Fix two pinned canonicalizers/verifiers $V_1,V_2$ whose outputs are hash-equivalent on all accepted strict artifacts.
+Then the reducer output of Definition~\ref{def:canonical_window_artifact_reducer} is identical under $V_1,V_2$, and any credit quantity that is a deterministic function of canonical strict artifacts (including $\deltao(t)$ and all gate indicators) is invariant under replacing $V_1$ by $V_2$.
+If hash-equivalence fails on any required artifact, the cycle fails closed.
+\end{proposition}
+
+% ============================================================
+\section{Quantum Reference Frames: Relative Artifacts and Invariants}\label{sec:quantum}
+\begin{definition}[QRF-relative artifact]\DefLabel{def:qrf_relative_artifact}\label{def:qrf_relative_artifact}
+A QRF-relative artifact is a pair $(A^{(Q)},Q)$ recorded as a strict artifact, where $Q$ is the declared quantum reference frame and $A^{(Q)}$ is the recorded outcome relative to $Q$, together with pinned inter-frame transforms on a declared scope.
+\end{definition}
+
+\begin{definition}[Frame-invariant proxy]\DefLabel{def:frame_invariant_proxy}\label{def:frame_invariant_proxy}
+A proxy is frame-invariant if its value is invariant (or conservatively bounded) under all verified inter-frame transforms on its declared scope.
+\end{definition}
+
+\begin{theorem}[QRF-relative strict artifacts and frame-invariant inferences]\DefLabel{thm:qrf_relative_artifacts}\label{thm:qrf_relative_artifacts}
+In regimes where global objective classical recordability cannot be certified, the ledger \MUST{} record QRF-relative artifacts (Definition~\ref{def:qrf_relative_artifact}) consistent with relational quantum-frame descriptions \cite{Giacomini2019QRF}.
+Observability credit is admissible only for frame-invariant proxy components (Definition~\ref{def:frame_invariant_proxy}); non-invariant components fail closed.
+\end{theorem}
+
+% ============================================================
+\section{Physical Limits and Spatiotemporal Latency}\label{sec:physics}
+\begin{theorem}[STE-physical pushforward non-overlap]\DefLabel{thm:ste_physical_pushforward_nonoverlap}\label{thm:ste_physical_pushforward_nonoverlap}
+All physical feasibility envelopes used by \MTE{} are read-only pushforwards from imported \STE{} substrate telemetry (Definition~\ref{def:ste_physical_envelope_alias}).
+\MTE{} does not introduce independent physical dynamics; it only defines acceptance predicates for observability-credit minting over imported physical envelopes.
+\end{theorem}
+
+\begin{definition}[Physical unit signature]\DefLabel{def:physical_unit_signature}\label{def:physical_unit_signature}
+Each physical scalar used in \MTE{} gates carries a declared unit in a pinned basis (at minimum: joule, second, meter, bit) and a declared conversion map into joule-equivalent cost.
+Any missing unit tag or non-replayable conversion rule invalidates the corresponding physical claim.
+\end{definition}
+
+\begin{theorem}[Measurement backreaction and epistemic saturation]\DefLabel{thm:measurement_backreaction_saturation}\label{thm:measurement_backreaction_saturation}
+Under Theorem~\ref{thm:ste_physical_pushforward_nonoverlap}, imported \STE{} thermal/holographic envelopes (grounded in Landauer/Bekenstein-type limits \cite{Landauer1961,Bekenstein1973}) imply a finite physical contraction budget per local patch.
+Therefore there exists a regime-calibrated threshold $\epssat>0$ such that once $S(\widehat{\Et})<\epssat$, additional reliable contraction becomes non-credit-bearing and $\mathrm{ECR}(t)$ is forced toward $0$ by fail-closed gating.
+\end{theorem}
+
+\begin{theorem}[Measurement disturbance tradeoff]\DefLabel{thm:measurement_disturbance_tradeoff}\label{thm:measurement_disturbance_tradeoff}
+Given imported disturbance envelopes and declared intervention diagnostics, there exists a pinned tradeoff functional $\Psi$ such that beyond a declared threshold, incremental probing raises certified disturbance faster than certified looseness reduction.
+If the disturbance envelope is exceeded, $\deltao(t)=0$ on the affected scope.
+\end{theorem}
+
+\begin{corollary}[Spatiotemporal retardation of witness capital]\DefLabel{cor:spatiotemporal_witness_retardation}\label{cor:spatiotemporal_witness_retardation}
+To increase $W(t)$ by incorporating genuinely independent witness domains at proper distance $R$, integrating their evidence into strict artifacts incurs causal delay $\Delta t \ge R/\clight$.
+Certified claims of macroscopic increases in $W(t)$ without corresponding auditable causal delays must be rejected.
+\end{corollary}
+
+\begin{definition}[Physical envelope calibration]\DefLabel{def:physical_envelope_calibration}\label{def:physical_envelope_calibration}
+A physical-envelope calibration is a typed projection from imported \STE{} telemetry, publishing
+\[
+\Theta_{\mathrm{phys}}(t):=\big(T_t,Q^{\max}_t,R_t,E^{\max}_t,\tau^{\max}_t,\sigma^{\mathrm{phys}}_t,\mathcal{U}_t\big),
+\]
+where $\tau^{\max}_t$ is maximal admissible causal-latency budget, $\sigma^{\mathrm{phys}}_t$ is uncertainty radius, and $\mathcal{U}_t$ is the unit/conversion signature from Definition~\ref{def:physical_unit_signature}.
+\end{definition}
+
+\begin{theorem}[Calibrated physical-envelope gate]\DefLabel{thm:calibrated_physical_envelope_gate}\label{thm:calibrated_physical_envelope_gate}
+Credit-bearing rehydration/probing requests on window $t$ are admissible only if:
+\[
+\mathcal{C}^{(J)}_{\mathrm{req}}(t)\le \mathcal{G}^{(J)}\!\big(\Theta_{\mathrm{phys}}(t)\big)-\sigma^{\mathrm{phys},(J)}_t,
+\]
+and the dimensional consistency checks pass:
+\[
+\mathrm{dim}\!\big(\mathcal{C}_{\mathrm{req}}(t)\big)=\mathrm{dim}\!\big(\mathcal{G}(\Theta_{\mathrm{phys}}(t))\big)=J.
+\]
+If calibration artifacts are missing, unit checks fail, or inequalities fail, the request is non-credit-bearing and the corresponding $\deltao$ contribution is set to $0$.
+\end{theorem}
+
+% ============================================================
+\section{Oracle-Free Escrow and Extortion Resistance}\label{sec:extortion}
+\begin{definition}[Oracle-free attack signature]\DefLabel{def:oracle_free_attack_signature}\label{def:oracle_free_attack_signature}
+An oracle-free attack signature is a pinned, replay-verifiable strict artifact that is physically required by a threatened action and can serve as an unambiguous condition in an escrow release rule.
+\end{definition}
+
+\begin{theorem}[Oracle-free epistemic escrow]\DefLabel{thm:oracle_free_epistemic_escrow}\label{thm:oracle_free_epistemic_escrow}
+In no-meta settings, escrow semantics \MUSTNOT{} rely on subjective oracles to decide whether an action occurred.
+Instead, any escrow that depends on action occurrence \MUST{} be keyed to an oracle-free attack signature (Definition~\ref{def:oracle_free_attack_signature}) so that release is deterministic under replay.
+\end{theorem}
+
+\begin{definition}[Cryptographic myopia binding]\DefLabel{def:cryptographic_myopia_certificate}\label{def:cryptographic_myopia_certificate}
+A cryptographic myopia binding is a pair of artifacts on a declared scope: (i) a public policy commitment binding the deployed decision pipeline hash and verifier key, and (ii) replay-verifiable non-conditioning proofs showing channel-independence of executed decisions from a specified threat channel.
+The public artifact proves policy invariance without revealing whether a threat signal was observed.
+\end{definition}
+
+\begin{definition}[Policy indistinguishability audit]\DefLabel{def:policy_indistinguishability_audit}\label{def:policy_indistinguishability_audit}
+A policy indistinguishability audit is a replay-verifiable test bundle containing:
+(i) target emission cadence and certified deviation bound,
+(ii) a pinned distinguishability metric (e.g., total variation proxy or classifier AUC bound),
+and (iii) allocated significance debit $\alpha_{\mathrm{deni}}(t)$ for this channel.
+The audit is valid only if cadence deviation and distinguishability are both below pinned thresholds and $\alpha_{\mathrm{deni}}(t)$ is included in Definition~\ref{def:dual_risk_ledger}.
+\end{definition}
+
+\begin{theorem}[Extortion nullification via cryptographic myopia]\DefLabel{thm:extortion_nullification_myopia}\label{thm:extortion_nullification_myopia}
+To neutralize trustless extortion that conditions adversary actions on the system's future observations, the system \MUST{} be able to remove the extortion channel from its decision pipeline without relying on negotiation.
+If an adversary publishes a mechanically verifiable extortion condition, the system \MUST{} either:
+(i) publish and maintain a cryptographic myopia binding (Definition~\ref{def:cryptographic_myopia_certificate}) for the relevant scope, or
+(ii) move the affected action class into conservative abstention with zero credit minting on that scope.
+Under a valid binding, the extortion threat loses predictive control over system behavior on the certified scope, and any attempt to reintroduce channel dependence becomes an observable regime change requiring bridges and may be rejected.
+\end{theorem}
+
+\begin{theorem}[Plausible Deniability against Meta-Extortion]\DefLabel{thm:plausible_deniability_meta_extortion}\label{thm:plausible_deniability_meta_extortion}
+If the protocol emits a unique event only when myopia activates, that event itself can be weaponized as a trigger for meta-extortion.
+Under no-meta constraints, the protocol \MUST{} avoid observables that distinguish ``activated myopia'' from ordinary operation.
+To achieve this, the system \MUST{} implement \emph{Zero-Knowledge Plausible Deniability}:
+\begin{enumerate}
+\item The ledger emits a constant-rate stream of policy-compliance proofs for all relevant scopes.
+\item Myopia actions (filtering, blinding, and threat non-conditioning) are executed inside a private proof-carrying channel whose public outputs are computationally indistinguishable from routine policy-compliance outputs.
+\item On challenge, the system provides a succinct non-conditioning proof bound to the previously published policy commitment, without revealing whether a threat signal was detected.
+\item The system \MUST{} publish a valid policy indistinguishability audit (Definition~\ref{def:policy_indistinguishability_audit}) on each credited horizon.
+\end{enumerate}
+This breaks both primary and meta-extortion equilibria by denying adversaries a reliable public trigger.
+\end{theorem}
+
+\begin{proposition}[No-deception-compatible deniability]\DefLabel{prop:no_deception_compatible_deniability}\label{prop:no_deception_compatible_deniability}
+Under Assumption~\ref{ass:no_deception_alias}, deniability mechanisms are admissible only if all public outputs remain truthful statements over the shared strict core.
+Indistinguishability may hide internal branch selection, but it \MUSTNOT{} fabricate actor-specific false realities or covert epistemic overrides.
+\end{proposition}
+
+% --- Infinite-Horizon Obfuscation against Bayesian Decay ---
+\begin{theorem}[Bayesian Decay and Epistemic Mixed Strategies]\DefLabel{thm:bayesian_decay_mixed_strategy}\label{thm:bayesian_decay_mixed_strategy}
+Plausible Deniability (\lbl{thm:plausible_deniability_meta_extortion}) decays under infinite repeated interactions as adversaries apply Bayesian updating to the system's apparent non-responses.
+
+To preserve long-horizon obfuscation against Meta-Extortion, the system \MUSTNOT{} play a pure strategy of continuous Myopia.
+Instead, it \MUST{} employ an \emph{Epistemic Mixed Strategy}: using pinned cryptographically secure randomness to probabilistically select between (i) ZK-Myopia execution, and (ii) conservative acknowledgement/compliance with non-fatal demands, under a formally declared upper bound on expected harm.
+This follows the minimax logic of mixed strategies in adversarial games \cite{vonNeumann1928}.
+This bounds the adversary's posterior confidence in the system's internal state strictly below $1$, preserving an indefinite fog-of-war without requiring burn-based signaling.
+\end{theorem}
+
+\begin{theorem}[Extortion-leverage bound under mixed myopia]\DefLabel{thm:extortion_leverage_bound}\label{thm:extortion_leverage_bound}
+Let $p_t\in[0,1]$ be the declared probability of myopic execution on an extortion-exposed scope at window $t$, sampled from pinned CSPRNG artifacts.
+Let $L_t$ be adversarial leverage, defined as the maximal change in threatened-action probability induced by publishing an extortion signal.
+If myopia is cryptographically enforced on sampled windows and conservative abstention is enforced otherwise, then
+\[
+L_t \le 1-p_t.
+\]
+Hence a lower bound $p_t\ge p_{\min}>0$ enforces a uniform leverage ceiling $L_t\le 1-p_{\min}$, and prevents asymptotic certainty leverage.
+\end{theorem}
+
+% ============================================================
+\section{Holographic Histories: Availability, Fairness, and Cryptographic Freshening}\label{sec:availability}
+\begin{definition}[Holographic state root]\DefLabel{def:holographic_state_root}\label{def:holographic_state_root}
+A holographic state root is a commitment to cold-stored history omitted by an evaporative summary.
+\end{definition}
+
+\begin{theorem}[Landauer Cost of Epistemic Evaporation]\DefLabel{thm:landauer_cost_of_evaporation}\label{thm:landauer_cost_of_evaporation}
+Producing evaporative summaries and pruning historical evidence is a logically irreversible operation in the sense of information thermodynamics.
+By Landauer's principle, any irreversible erasure of $b$ bits incurs a strictly positive dissipation cost at least $b\,k_B T\ln 2$ into the environment (for temperature $T$).
+Therefore, the MTE \emph{history maintenance rate} is physically coupled to \STE{}'s thermodynamic substrate constraints:
+\begin{enumerate}
+\item The MTE \MUST{} account for an explicit evaporation heat budget $H_{\mathrm{evap}}(t)$ when checkpointing or pruning historical artifacts.
+\item Evaporative pruning \MUST{} be rate-limited by the \STE{} heat rejection capacity (the same substrate drag that constrains real-time computation).
+\item If the heat budget is saturated, MTE \MUST{} halt further irreversible pruning, forcing either substrate expansion or temporary memory saturation (with corresponding conservative reductions in $\delta_o$ issuance).
+\end{enumerate}
+This makes epistemic forgetting an explicit physical expenditure rather than an implicit, potentially catastrophic side-channel.
+\end{theorem}
+
+\begin{definition}[Erasure-coded state root]\DefLabel{def:erasure_coded_state_root}\label{def:erasure_coded_state_root}
+An erasure-coded state root commits to an erasure-coded encoding of cold history such that any $k$ of $n$ shards reconstruct the dataset, with auditable coding parameters.
+\end{definition}
+
+\begin{definition}[Data availability sampling]\DefLabel{def:data_availability_sampling}\label{def:data_availability_sampling}
+Data availability sampling (DAS) is a pinned procedure that probabilistically audits that committed cold-storage data corresponding to a state root remains retrievable, before an evaporative summary is accepted.
+\end{definition}
+
+\begin{definition}[Rehydration budget]\DefLabel{def:rehydration_budget}\label{def:rehydration_budget}
+A rehydration budget limits selective proof retrieval from cold storage for future paradigm updates per window.
+\end{definition}
+
+\begin{definition}[Rehydration lanes]\DefLabel{def:rehydration_lanes}\label{def:rehydration_lanes}
+Rehydration lanes partition rehydration capacity into (i) a protocol-critical lane reserved for safety and comparability (non-purchasable), and (ii) a best-effort lane subject to fees.
+\end{definition}
+
+\begin{definition}[Rehydration fee market]\DefLabel{def:rehydration_fee_market}\label{def:rehydration_fee_market}
+A rehydration fee market is a pinned nonlinear pricing rule for best-effort DAS and retrieval verification work, scaling with backlog and metrology budget usage, while preserving protocol-critical lane capacity.
+\end{definition}
+
+\begin{definition}[Freshening epoch]\DefLabel{def:freshening_epoch}\label{def:freshening_epoch}
+A freshening epoch is a pinned schedule specifying when historical cryptographic commitments and succinct proofs must be recursively re-wrapped into newly pinned proof/commitment systems before the declared security half-life of older assumptions elapses.
+\end{definition}
+
+\begin{definition}[Proof-carrying data wrapper]\DefLabel{def:proof_carrying_data_wrapper}\label{def:proof_carrying_data_wrapper}
+A proof-carrying data wrapper is a pinned recursive proof object that attests, with succinct verification, to the validity of a prior proof and its binding to an immutable historical digest, enabling rolling upgrades of cryptographic assumptions without reprocessing raw history.
+\end{definition}
+
+\begin{theorem}[Erasure-coded data availability guarantees]\DefLabel{thm:erasure_coded_das}\label{thm:erasure_coded_das}
+Any state root relied upon for rehydration \MUST{} be an erasure-coded state root with auditable parameters (e.g., $(n,k)$) such that any $k$ of $n$ shards reconstruct the dataset \cite{ReedSolomon1960}.
+Without verified erasure coding parameters, DAS cannot authorize a nontrivial rehydration budget for that history (fail-closed).
+\end{theorem}
+
+\begin{theorem}[Zero-knowledge succinct rehydration for bounded compute]\DefLabel{thm:zk_succinct_rehydration}\label{thm:zk_succinct_rehydration}
+Any depth certificate or rehydration request that aims to affect credit \MUST{} include a succinct proof (Definition~\ref{def:succinct_proof}) that the claimed computation holds.
+The metrology budget meters only verification cost; heavy computation is borne by the prover.
+If no succinct proof is supplied, the request is treated as non-credit-bearing and may be deferred or rejected without affecting current $\deltao$.
+\end{theorem}
+
+% --- Gravitational / Thermodynamic Envelope for Extreme Rehydration ---
+\begin{theorem}[Kugelblitz Limit on Cryptographic Rehydration]\DefLabel{thm:kugelblitz_rehydration_limit}\label{thm:kugelblitz_rehydration_limit}
+Under holographic retrieval with succinct rehydration (\lbl{thm:zk_succinct_rehydration}), the prover bears the computational burden of reconstruction.
+By the Landauer cost of epistemic evaporation (\lbl{thm:landauer_cost_of_evaporation}) and finite-region information bounds (e.g., Bekenstein-style limits), reconstructing and proving correctness of extreme-scale erasure-coded histories within a finite spatial radius $R$ concentrates irreversible dissipation.
+
+If the localized energy required for proof generation exceeds the Schwarzschild mass-energy threshold for the active computation region, the prover induces a \emph{Kugelblitz} (a black hole formed from radiation/computation), rendering the proof causally inaccessible to the ledger.
+Therefore, the Rehydration Budget \MUST{} be upper-bounded not only by fee markets and compute caps, but also by a pinned \emph{Gravitational--Thermodynamic Safe Envelope} $\mathcal{G}(R,T)$.
+Histories exceeding $\mathcal{G}(R,T)$ are permanently frozen as accessible only via distributed, sub-critical partial approximations (with explicit loss bounds), rather than full exact rehydration.
+\end{theorem}
+
+\begin{theorem}[Proactive cryptographic freshening of holographic histories]\DefLabel{thm:proactive_cryptographic_freshening}\label{thm:proactive_cryptographic_freshening}
+All succinct proofs and commitments suffer retroactive cryptographic decay over sufficiently long horizons.
+To prevent historical collapse of accumulated observability credit, the protocol \MUST{} enforce freshening epochs (Definition~\ref{def:freshening_epoch}).
+During each epoch, historical proof objects and state roots that remain credit-relevant \MUST{} be wrapped by proof-carrying data wrappers (Definition~\ref{def:proof_carrying_data_wrapper}) under newly pinned assumptions (e.g., higher-security or post-quantum systems), with succinct verification on the current regime.
+If a historical object is not freshened by the pinned deadline, its associated historical contribution to $\deltao$ undergoes continuous decay (or is moved to non-credit-bearing archival status) until freshened.
+\end{theorem}
+
+\begin{theorem}[Cryptographic Heteroculture for Proactive Freshening]\DefLabel{thm:cryptographic_heteroculture}\label{thm:cryptographic_heteroculture}
+Proactive Freshening (\lbl{thm:proactive_cryptographic_freshening}) reduces retroactive cryptographic decay but introduces a ``freshening trap'' if the newly adopted proof system contains an unknown fatal weakness.
+To avoid a single catastrophic upgrade path, the protocol \MUST{} enforce \emph{Cryptographic Heteroculture}:
+\begin{enumerate}
+\item Each historical holographic checkpoint is wrapped concurrently into at least $N\ge 3$ mathematically diverse proof-carrying systems (e.g., one lattice-based, one hash-based, and one isogeny-based, or other orthogonal families).
+\item A checkpoint is considered \emph{live-valid} if a supermajority of wrappers remain uncompromised under the pinned threat model.
+\item If any wrapper family is broken, the checkpoint survives via the remaining families and \MUST{} be re-wrapped, without requiring re-derivation of the raw historical data.
+\end{enumerate}
+This converts cryptographic evolution into a fault-tolerant portfolio rather than a brittle single point of failure.
+\end{theorem}
+
+\begin{theorem}[Data availability proofs and rehydration markets]\DefLabel{thm:data_availability_rehydration}\label{thm:data_availability_rehydration}
+Prior to accepting a rehydratable summary, the system \MUST{} enforce DAS over an erasure-coded state root (Theorem~\ref{thm:erasure_coded_das}).
+Rehydration requests \MUST{} respect rehydration lanes and \MUST{} supply succinct proofs for any credit-impacting operation (Theorem~\ref{thm:zk_succinct_rehydration}).
+If sampling fails or protocol-critical retrieval is unavailable beyond a pinned timeout, the system conservatively treats affected latent observables as irrecoverably destroyed for credit purposes and fails closed.
+\end{theorem}
+
+\begin{corollary}[Nonlinear fee throttling for rehydration]\DefLabel{cor:nonlinear_rehydration_fee}\label{cor:nonlinear_rehydration_fee}
+In the best-effort lane, the marginal fee to enqueue additional rehydration work \MUST{} increase superlinearly with backlog and metrology budget usage, preventing hot-path starvation by archival spam while preserving protocol-critical capacity.
+\end{corollary}
+
+% ============================================================
+\section{Compute and Overhead Gates}\label{sec:overhead}
+\begin{definition}[MTE compute budget]\DefLabel{def:mte_compute_budget}\label{def:mte_compute_budget}
+Each regime declares a metrology compute budget $B_{\mathrm{mte}}(t)$: the maximum certified compute/memory that may be consumed by MTE verifiers per window.
+\end{definition}
+
+\begin{proposition}[MTE overhead gate]\DefLabel{prop:mte_overhead_gate}\label{prop:mte_overhead_gate}
+If certified metrology overhead exceeds the declared budget on a window, then $\deltao(t)$ must be damped or set to $0$ until overhead returns below budget.
+\end{proposition}
+
+% --- Safe Interlock: MTE blackout forces STE throttling (tethered degradation) ---
+\begin{proposition}[Graceful Epistemic Degradation and \STE{} Tethering]\DefLabel{prop:graceful_epistemic_degradation}\label{prop:graceful_epistemic_degradation}
+The MTE Overhead Gate (\lbl{prop:mte_overhead_gate}) halts $\delta_o$ when metrology budgets are exceeded.
+Allowing \STE{} to continue aggressive strict-growth optimization while MTE is blinded creates a catastrophic divergence between internal models and external reality.
+
+The protocol \MUST{} enforce an external \emph{MTE--STE Tethering Contract}: if $\mathrm{ECR}(t)$ falls below a pinned maintenance threshold $\epsilon_{\mathrm{maint}}$, or if the Overhead Gate forces $\delta_o = 0$, then the control layer that schedules \STE{} actions \MUST{} clamp the commanded expansion pace by a declared decay function of elapsed unobserved time.
+Sustained MTE blackout \MUST{} trigger \emph{Graceful Epistemic Degradation Mode} in the control layer, throttling physical expansion and tightening reserve usage until observability capital is regenerated. This constrains operation without redefining any internal \STE{} strict-credit semantics.
+\end{proposition}
+
+% ============================================================
+\section{Main Result: Identifiability Takeoff}\label{sec:main}
+\begin{lemma}[From ECR to contraction]\DefLabel{lem:ecr_to_contraction}\label{lem:ecr_to_contraction}
+Fix a window $t=t_0,\dots,t_1-1$ in one observability regime.
+Assume all mandatory gates pass on each $t$ (Theorem~\ref{thm:gate_vector_completeness}).
+Assume the replay kernel yields $\mathbf{g}_t=1$ and $\mathrm{ecr\_net}_t\ge \underline{n}>0$.
+Assume a valid contraction response certificate (Definition~\ref{def:contraction_response_certificate}) provides $(\kappa_t,\eta_t)$ with $\kappa_t>0$ and residual slack $\eta_t\ge 0$, satisfying
+\[
+S\!\left(\widehat{\mathcal{E}_{t+1}}^{\mathrm{core}}\right)\le S\!\left(\widehat{\mathcal{E}_{t}}^{\mathrm{core}}\right)-\kappa_t\,\mathrm{ecr\_net}_t+\eta_t.
+\]
+Then
+\[
+S\!\left(\widehat{\mathcal{E}_{t_1}}^{\mathrm{core}}\right)\le S\!\left(\widehat{\mathcal{E}_{t_0}}^{\mathrm{core}}\right)-\underline{n}\sum_{t=t_0}^{t_1-1}\kappa_t+\sum_{t=t_0}^{t_1-1}\eta_t.
+\]
+\end{lemma}
+
+\begin{theorem}[Identifiability takeoff]\DefLabel{thm:identifiability_takeoff}\label{thm:identifiability_takeoff}
+Assume \lbl{ass:ledger_observable_only} and a fixed observability regime on a window.
+If the hypotheses of Lemma~\ref{lem:ecr_to_contraction} hold and
+\[
+\underline{n}\sum_{t=t_0}^{t_1-1}\kappa_t>\sum_{t=t_0}^{t_1-1}\eta_t,
+\]
+then:
+(i) $S(\widehat{\mathcal{E}_{t}}^{\mathrm{core}})$ contracts by at least $\underline{n}\sum_{t=t_0}^{t_1-1}\kappa_t-\sum_{t=t_0}^{t_1-1}\eta_t$, and
+(ii) every \STE{}-certified lower bound that is monotone nonincreasing in conservative-set looseness is weakly improved on that window.
+\end{theorem}
+
+\section{Joint Growth Law}\label{sec:joint}
+\begin{definition}[Joint positive-certification region]\DefLabel{def:joint_positive_region}\label{def:joint_positive_region}
+Let $\theta$ denote deployment parameters/policies.
+Define baseline and enhanced certified lower bounds:
+\[
+\mathrm{LB}_0(\theta):=\mathrm{LB}_{\STE}(\theta;\deltao\equiv 0),\qquad
+\mathrm{LB}_1(\theta):=\mathrm{LB}_{\STE+\MTE}(\theta).
+\]
+Define positive-certification regions
+\[
+\Theta_0^{+}:=\{\theta:\mathrm{LB}_0(\theta)>0\},\qquad
+\Theta_1^{+}:=\{\theta:\mathrm{LB}_1(\theta)>0\}.
+\]
+\end{definition}
+
+\begin{definition}[Certified MTE uplift functional]\DefLabel{def:certified_uplift_functional}\label{def:certified_uplift_functional}
+Let $U(\theta)\ge 0$ be a replay-computable lower bound on certified long-run gain contributed by \MTE{} under policy $\theta$, after applying tethering, physical, and risk penalties.
+\end{definition}
+
+\begin{definition}[STE looseness sensitivity coefficient]\DefLabel{def:ste_looseness_sensitivity}\label{def:ste_looseness_sensitivity}
+For policy $\theta$, let $L_{\STE}(\theta)\ge 0$ be a certified coefficient such that for any two conservative sets
+$E_1\subseteq E_0$ on the same regime/interface,
+\[
+\mathrm{LB}_{\STE}(\theta;E_1)-\mathrm{LB}_{\STE}(\theta;E_0)\ge L_{\STE}(\theta)\cdot\big(S(E_0)-S(E_1)\big)_+.
+\]
+\end{definition}
+
+\begin{theorem}[Constructive uplift lower bound from contraction]\DefLabel{thm:constructive_uplift_from_contraction}\label{thm:constructive_uplift_from_contraction}
+Suppose windows in $\mathcal{W}(\theta)$ satisfy Theorem~\ref{thm:identifiability_takeoff}.
+Define per-window certified contraction margin
+\[
+\Delta S_t^{\mathrm{cert}}:=\underline n_t\kappa_t-\eta_t,\qquad \Delta S_t^{\mathrm{cert}}>0\ \text{on accepted windows}.
+\]
+Under Definition~\ref{def:ste_looseness_sensitivity}, a conservative replay-computable uplift is
+\[
+U(\theta):=L_{\STE}(\theta)\sum_{t\in\mathcal{W}(\theta)}\Delta S_t^{\mathrm{cert}}-\Pi_{\mathrm{tether}}(\theta)-\Pi_{\mathrm{sat}}(\theta),
+\]
+where $\Pi_{\mathrm{tether}},\Pi_{\mathrm{sat}}\ge 0$ are declared tethering/saturation deductions.
+Then $U(\theta)$ is a valid instance of Definition~\ref{def:certified_uplift_functional}.
+\end{theorem}
+
+\begin{theorem}[Joint takeoff condition]\DefLabel{thm:joint_takeoff_condition}\label{thm:joint_takeoff_condition}
+Assume \STE{}~\cite{STE2026} and \MTE{} governance.
+Suppose infinitely many disjoint windows satisfy Theorem~\ref{thm:identifiability_takeoff}, and on each such window \STE{} certifies nonnegative net $\sum_t\deltas(t)\ge 0$.
+Assume the certified uplift inequality
+\[
+\mathrm{LB}_1(\theta)\ge \mathrm{LB}_0(\theta)+U(\theta)
+\]
+for all admissible $\theta$, where $U$ is from Definition~\ref{def:certified_uplift_functional}.
+Then
+\[
+\Theta_0^{+}\subseteq \Theta_1^{+}.
+\]
+If there exists $\theta^\star$ with $\mathrm{LB}_0(\theta^\star)\le 0$ and $U(\theta^\star)>-\mathrm{LB}_0(\theta^\star)$, then
+\[
+\theta^\star\in \Theta_1^{+}\setminus\Theta_0^{+},
+\]
+so the inclusion is strict.
+\end{theorem}
+
+\section{Post-Omniscience Teleological Shift}\label{sec:omniscience}
+\begin{corollary}[Post-omniscience teleological shift]\DefLabel{cor:post_omniscience_shift}\label{cor:post_omniscience_shift}
+If the system approaches near-omniscience relative to admissible predictors and reachable light cone, operational exogeneity may decay, forcing $\deltao\to 0$ under the grounding gate.
+To avoid stagnation without deliberate self-erasure, the system \MAY{} expand its audited experimental domain by provisioning causally separated descendant domains (or new controlled experimental substrates) whose outcomes are shielded from the parent filtration, while preserving ledger continuity and replay-verifiability for downstream auditors.
+\end{corollary}
+
+% ============================================================
+\section{Operational Deployment Profile}\label{sec:ops}
+\subsection{Events and schemas}\label{sec:events_and_schemas}
+\begin{lstlisting}[language=JSON,caption={Minimum event types (MTE supplement)}]
+{
+  "global_must_include": [
+    "event_id",
+    "window_id",
+    "timestamp",
+    "canonical_hash",
+    "canonicalization_profile",
+    "hash_suite",
+    "signature_suite",
+    "unit_profile",
+    "parser_profile_id",
+    "verifier_pin"
+  ],
+  "global_field_specs": {
+    "window_id":{"type":"integer","min":0},
+    "timestamp":{"type":"string","format":"rfc3339"},
+    "canonical_hash":{"type":"string","encoding":"hex"},
+    "unit_profile":{"type":"string","must_pin":true}
+  },
+  "reducer_policy": {
+    "reference": "def:canonical_window_artifact_reducer",
+    "singleton_resolution": "max(timestamp,event_id,canonical_hash)",
+    "multiset_resolution": "hash_sorted_list",
+    "fail_closed_on_type_or_signature_error": true
+  },
+  "gate_vector_schema": {
+    "keys": [
+      "g_pred","g_depth","g_causal","g_safety","g_frag",
+      "g_transport","g_frame","g_avail","g_fresh","g_overhead"
+    ],
+    "aggregation_rule": "g = product(keys)",
+    "fail_closed_on_missing": true,
+    "requires_decision_rules": "def:gate_bit_decision_rules"
+  },
+  "gate_bit_predicates": {
+    "g_pred":{"requires":["PREDICTOR_ADMISSIBILITY_CERT"]},
+    "g_depth":{"requires":["DEPTH_CERT_UPDATE"]},
+    "g_causal":{"requires":["CAUSAL_INTERVENTION","CAUSAL_RESPONSE_CERT"]},
+    "g_safety":{"requires":["SAFETY_ENVELOPE_PIN"]},
+    "g_frag":{"requires":["FRAGMENTATION_CERT"]},
+    "g_transport":{"requires":["CONNECTION_EDGE_PIN"],"conditional":["FLATNESS_CERT_UPDATE"]},
+    "g_frame":{"requires":["FRAME_INVARIANCE_CERT"]},
+    "g_avail":{"requires":["DAS_SAMPLE"]},
+    "g_fresh":{"requires":["FRESHEN_EPOCH"]},
+    "g_overhead":{"requires":["OVERHEAD_REPORT"]}
+  },
+  "event_types": [
+    {"type":"PREDICTOR_ADMISSIBILITY_CERT","must_include":["predictor_class_id","baseline_class_id","dominance_test_result","verifier_pin"]},
+    {"type":"STOCHASTIC_PROFILE_PIN","must_include":["probability_space_id","filtration_id","integrability_caps","stopping_rule_profile","verifier_pin"]},
+    {"type":"REGULARITY_CERT_UPDATE","must_include":["regularity_cert_or_reflection","risk_budget_delta","dual_risk_map_id","verifier_pin"]},
+    {"type":"DEPTH_CERT_UPDATE","must_include":["depth_certificate","succinct_proof","verifier_pin"]},
+    {"type":"SAFETY_ENVELOPE_PIN","must_include":["envelope_params","reserve_binding","verifier_pin"]},
+    {"type":"FRAGMENTATION_CERT","must_include":["fragmentation_bound","nonempty_flag","surrogate_size_cert","verifier_pin"]},
+    {"type":"RUPTURE_ALERT","must_include":["rupture_detector_output","persistence_spectrum","verifier_pin"]},
+    {"type":"META_MORPHISM_ESCROW","must_include":["P_pp_pin","transition_scope","verifier_pins"]},
+    {"type":"CAUSAL_INTERVENTION","must_include":["intervention_spec","commitment","timestamp","verifier_pin"]},
+    {"type":"CAUSAL_RESPONSE_CERT","must_include":["response_cert","intervention_ref","verifier_pin"]},
+    {"type":"CONNECTION_EDGE_PIN","must_include":["from_regime","to_regime","translator_pin","comparison_interface","verifier_pin"]},
+    {"type":"FLATNESS_CERT_UPDATE","must_include":["subgraph_scope","holonomy_bounds","verifier_pin"]},
+    {"type":"FRAME_INVARIANCE_CERT","must_include":["scope","transform_set_id","invariant_proxy_ids","bound","verifier_pin"]},
+    {"type":"PAGE_DISCOUNT_UPDATE","must_include":["page_discount","saturation_proxy","verifier_pin"]},
+    {"type":"MYOPIA_POLICY_BINDING","must_include":["scope","policy_commitment","verification_key","verifier_pin"]},
+    {"type":"POLICY_NONCONDITIONING_PROOF","must_include":["scope","proof","public_input_digest","verifier_pin"]},
+    {"type":"POLICY_CADENCE_AUDIT","must_include":["scope","target_rate","observed_rate","deviation_bound","alpha_deni","verifier_pin"]},
+    {"type":"INDISTINGUISHABILITY_AUDIT","must_include":["scope","metric_name","distance_upper_bound","alpha_deni","verifier_pin"]},
+    {"type":"FRESHEN_EPOCH","must_include":["new_crypto_pins","pcd_wrapper_roots","deadline","verifier_pin"]},
+    {"type":"EC_STATE_ROOT_COMMIT","must_include":["state_root","erasure_params","commitment_scheme","verifier_pin"]},
+    {"type":"DAS_SAMPLE","must_include":["state_root","sample_plan","responses","success_flag","verifier_pin"]},
+    {"type":"REHYDRATION_REQUEST","must_include":["state_root","request_spec","lane","succinct_proof","fee_paid","timeout","physical_cost_joule","verifier_pin"]},
+    {"type":"PHYSICAL_ENVELOPE_CALIBRATION","must_include":["temperature_bound","heat_rejection_cap","radius","energy_cap","latency_cap","uncertainty_radius","unit_signature","verifier_pin"]},
+    {"type":"OVERHEAD_REPORT","must_include":["window_id","mte_compute_spent","mte_memory_spent","verifier_pin"]},
+    {"type":"ECR_KERNEL_REPORT","must_include":["window_id","ecr_raw","ecr_net","pi_bridge","pi_risk","pi_phys","gate_vector","gate_vector_hash","gate_rule_id","algebra_check","verifier_pin"]},
+    {"type":"MGF_CALIBRATION_CERT","must_include":["window_id","eta","mgf_upper_bound","null_model_id","verifier_pin"]},
+    {"type":"RISK_DEBIT_REPORT","must_include":["window_id","epsilon_risk","alpha_ref","alpha_avail","alpha_crypto","alpha_deni","pi_ref","pi_avail","pi_crypto","pi_deni","alpha_total_cap","dual_risk_map_id","verifier_pin"]},
+    {"type":"WITNESS_DEP_GRAPH_UPDATE","must_include":["window_id","alpha_hat","nu_drift","lag_bound","cluster_hash","verifier_pin"]},
+    {"type":"SOCIAL_ENDOGENEITY_REPORT","must_include":["window_id","chi_endogeneity","telemetry_digest","verifier_pin"]},
+    {"type":"PARSER_EQUIV_AUDIT","must_include":["window_id","parser_a","parser_b","hash_equiv_rate","failure_set_hash","verifier_pin"]},
+    {"type":"MYOPIA_MIXED_POLICY_COMMIT","must_include":["scope","p_min","rng_commitment","harm_cap","verifier_pin"]}
+  ]
+}
+\end{lstlisting}
+
+\subsection{Gate rules}\label{sec:gate_rules}
+\begin{itemize}[leftmargin=*]
+  \item \MUST{} reject any credit-bearing claim if \lbl{def:observable_probability_space} or \lbl{def:audit_stochastic_admissibility} artifacts are missing.
+  \item \MUST{} compute each window bundle via Definition~\ref{def:canonical_window_artifact_reducer}; reducer failure implies fail-closed window.
+  \item \MUST{} reject positive $\deltao$ without predictor admissibility, depth certificates with succinct proofs, causal response certificates, and a pinned observation safety envelope.
+  \item \MUST{} treat deductively unavailable regularity as fail-closed unless imported \STE{} reflection artifacts are consumed through Definition~\ref{def:empirical_reflection_gate} (Thm.~\ref{thm:empirical_reflection_regularity}).
+  \item \MUST{} enforce dual-risk ledger consistency and probability coherence: per-window $\epsilon_{\mathrm{risk}}$ and channel debits must satisfy Definition~\ref{def:dual_risk_ledger} and Proposition~\ref{prop:dual_risk_probability_coherence}.
+  \item \MUST{} treat rupture detector firings as escrowed ontology candidates; progress requires meta-morphism escrow (Prop.~\ref{prop:ontological_rupture_escrow}).
+  \item \MUST{} discount witness-derived contributions by a Page-limit discount when declared (Thm.~\ref{thm:page_limit_entanglement_saturation}).
+  \item \MUST{} apply dynamic collusion lag discount when witness dependence updates are stale (Thm.~\ref{thm:dynamic_collusion_lag_bound}).
+  \item \MUST{} apply social-endogeneity discount using certified $\chi_t$ (Thm.~\ref{thm:endogeneity_discount_bound}); if unavailable, witness-derived contribution fails closed.
+  \item \MUST{} restrict cross-regime comparability to explicit overlap/escrow scopes unless flatness certificates are supplied for the used transition subgraph (Thm.~\ref{thm:non_abelian_paradigm_holonomy}).
+  \item \MUST{} enforce frame-invariant inference when global recordability cannot be certified.
+  \item \MUST{} enforce erasure-coded DAS and succinct rehydration proofs; preserve protocol-critical lanes against fee-based crowd-out.
+  \item \MUST{} enforce calibrated physical-envelope gate with unit-signature checks for credit-bearing extreme compute/rehydration requests (Thm.~\ref{thm:calibrated_physical_envelope_gate}, Def.~\ref{def:physical_unit_signature}).
+  \item \MUST{} enforce freshening epochs; unfreshened historical proofs decay or become non-credit-bearing (Thm.~\ref{thm:proactive_cryptographic_freshening}).
+  \item \MUST{} enforce metrology overhead budgets.
+  \item \MUST{} enforce canonical gate-vector schema, deterministic gate-bit decision rules, and fail closed on missing gate components (Definition~\ref{def:gate_vector_schema}, Definition~\ref{def:gate_bit_decision_rules}, Theorem~\ref{thm:gate_vector_completeness}).
+  \item \MUST{} enforce ECR algebraic consistency between reported raw/net signals and penalties (Proposition~\ref{prop:ecr_kernel_algebraic_consistency}).
+  \item \MUST{} require MGF calibration certificates before constructing test supermartingales used for anytime over-crediting control (Thm.~\ref{thm:kernel_to_test_supermartingale_lift}).
+  \item \MUST{} require cadence and indistinguishability audits for myopia plausible-deniability claims and debit $\alpha_{\mathrm{deni}}$ to the dual risk ledger (Definition~\ref{def:policy_indistinguishability_audit}).
+  \item \MUST{} enforce no-deception-compatible deniability constraints (Proposition~\ref{prop:no_deception_compatible_deniability}).
+  \item \MUST{} handle extortion channels by either cryptographic myopia bindings with non-conditioning proofs or conservative abstention on affected scopes (Thm.~\ref{thm:extortion_nullification_myopia}, Thm.~\ref{thm:extortion_leverage_bound}).
+\end{itemize}
+
+\section{Destructive Tests}\label{sec:destructive_tests}
+\begin{enumerate}[leftmargin=*]
+  \item \texttt{test:\allowbreak GODEL\_EXHAUST}: exhaust proof search; reflection gate must allow bounded risk-bearing progress without breaking fail-closed interfaces.
+  \item \texttt{test:\allowbreak DUAL\_RISK\_LEDGER}: inject inconsistent $\epsilon_{\mathrm{risk}}$ vs.\ $(\alpha_{\mathrm{ref}},\alpha_{\mathrm{avail}},\alpha_{\mathrm{crypto}},\alpha_{\mathrm{deni}})$ or force $\alpha_\Sigma>1$; gate must reject by Definition~\ref{def:dual_risk_ledger}.
+  \item \texttt{test:\allowbreak GRUE\_RUPTURE}: inject persistence-discontinuous substrate shift; rupture detector must trigger escrow path rather than classifying as noise.
+  \item \texttt{test:\allowbreak PAGE\_SATURATION}: push saturation proxy upward; witness-derived ECR must decay deterministically.
+  \item \texttt{test:\allowbreak SYBIL\_DYNAMIC}: perform adaptive witness splitting/collusion between dependence-graph updates; credited witness capacity must respect Theorem~\ref{thm:dynamic_collusion_lag_bound}.
+  \item \texttt{test:\allowbreak SOCIAL\_ENDOGENEITY}: hold graph-based dependence fixed while increasing certified $\chi_t$; witness-derived credited contribution must monotonically decrease (Theorem~\ref{thm:endogeneity_discount_bound}).
+  \item \texttt{test:\allowbreak EXTORTION\_CONTRACT}: publish extortion channel; policy binding plus non-conditioning proof must remove the channel from policy dependence or force conservative abstention.
+  \item \texttt{test:\allowbreak PLAUSIBLE\_DENIABILITY\_AUDIT}: evaluate cadence drift and distinguishability metrics; fail deniability claim if thresholds are violated.
+  \item \texttt{test:\allowbreak NO\_DECEPTION\_DENIABILITY}: attempt deniability via false actor-specific narratives; gate must reject under Proposition~\ref{prop:no_deception_compatible_deniability}.
+  \item \texttt{test:\allowbreak CRYPTO\_DECAY}: deprecate old crypto pins; unfreshened history must decay; freshened PCD wrappers preserve validity under new pins.
+  \item \texttt{test:\allowbreak PHYS\_ENVELOPE\_CALIB}: replay physical calibration bundle and reject rehydration requests exceeding calibrated envelope.
+  \item \texttt{test:\allowbreak UNIT\_SIGNATURE}: perturb unit tags/conversion map; any dimensional mismatch in physical gate must force fail-closed.
+  \item \texttt{test:\allowbreak ECR\_KERNEL\_REPLAY}: replay \texttt{ECR\_KERNEL\_REPORT} and verify $\deltao(t)$ equals Definition~\ref{def:deltao_operator} exactly.
+  \item \texttt{test:\allowbreak ECR\_NET\_ALGEBRA}: perturb reported \texttt{ecr\_net} away from $\max(0,\texttt{ecr\_raw}-\texttt{pi\_bridge}-\texttt{pi\_risk}-\texttt{pi\_phys})$; window must fail closed.
+  \item \texttt{test:\allowbreak GATE\_VECTOR\_COMPLETENESS}: remove one required bit-artifact and verify $\mathbf g_t=0$; provide all required artifacts and verify deterministic $\mathbf g_t=1$.
+  \item \texttt{test:\allowbreak OPTIONAL\_STOPPING\_REPLAY}: construct $M_t$ from \texttt{MGF\_CALIBRATION\_CERT}; verify Ville-style boundary under adaptive stopping.
+  \item \texttt{test:\allowbreak RISK\_BUDGET\_COMPOSE}: force channel-wise acceptance events and verify global false-acceptance budget never exceeds Theorem~\ref{thm:risk_budget_composition}.
+  \item \texttt{test:\allowbreak PARSER\_EQUIV}: run dual pinned canonicalizers on same artifact stream; any hash mismatch must force fail-closed cycle behavior.
+  \item \texttt{test:\allowbreak COUPLED\_CREDIT\_MARTINGALE}: run adaptive stopping over coupled credits and verify anytime control in Corollary~\ref{cor:coupled_false_accept_bound}.
+  \item \texttt{test:\allowbreak SUBMODULAR\_WITNESS\_GREEDY}: compare declared algorithm against exhaustive optimum on small instances and verify declared ratio $\rho$ (or $(1-1/e)$ for cardinality budgets).
+\end{enumerate}
+
+\appendix
+\section{Proof Compendium}\label{app:proofs}
+
+\begin{proof}[Proof of Theorem~\ref{thm:anytime_valid_auditing}]
+The theorem is an import statement.
+By the non-overlap contract in Section~\ref{sec:ste-compat}, strict-credit anytime-validity is delegated to \STE{} and not modified by \MTE{}.
+Therefore any strict-credit claim in this document inherits \STE{} anytime-valid auditing unchanged.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:paraconsistent_epistemic_isolation}]
+By construction, empirical reflection outputs are typed as risk-bearing escrow artifacts and not strict-core state updates.
+Paraconsistent interfaces in \STE{} block explosion from inconsistent auxiliary hypotheses into strict-core invariants.
+Hence reflection can affect only escrowed/risk-accounted channels, not strict-core safety predicates.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:canonical_bundle_determinism}]
+Definition~\ref{def:canonical_window_artifact_reducer} applies a fixed sequence of deterministic operations (filter, normalize, sort, tie-break).
+Given fixed parser/unit/signature profiles, each operation is a function.
+Function composition is deterministic, so $\mathsf{Reduce}(\mathcal{L},t)$ is unique for each $t$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:dual_risk_ledger_consistency}]
+Definition~\ref{def:dual_risk_ledger} gives
+\[
+\erisk(t)=\Phi_t(\alpha_{\mathrm{ref}}(t),\alpha_{\mathrm{avail}}(t),\alpha_{\mathrm{crypto}}(t),\alpha_{\mathrm{deni}}(t))
+\]
+with envelope $\alpha_{\Sigma}(t)\le \erisk(t)\le 1$.
+Therefore for each $t$,
+\[
+\alpha_{\Sigma}(t)\le \erisk(t).
+\]
+Summing over windows yields
+\[
+\sum_t\alpha_{\Sigma}(t)\le \sum_t\erisk(t)\le \bar\epsilon.
+\]
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:dual_risk_probability_coherence}]
+Definition~\ref{def:dual_risk_ledger} requires both $\alpha_{\Sigma}(t)\le 1$ and $\erisk(t)\in[0,1]$.
+If either constraint is violated, the reported object is not a coherent per-window probability budget.
+By fail-closed policy, non-coherent windows cannot support credit-bearing acceptance.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:risk_penalty_monotonicity}]
+Each channel map $\psi_j$ in Definition~\ref{def:risk_penalty_channel_map} is nondecreasing.
+Holding all other channels fixed, increasing one debit cannot decrease its mapped term.
+Summing nondecreasing terms preserves nondecreasing behavior, so $\PiRisk_t$ cannot decrease.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:topos_theoretic_translation}]
+The claim is constructive: any logic-changing regime transition is accepted only when represented by declared functors $(f^\ast\dashv f_\ast)$ and, when needed, a conservative projection $\mathsf{Dec}$ into the classical strict core.
+Since accepted inferences must pass that projection, strict-core invariants are preserved by conservative image.
+If required structure is missing, the transition fails closed by gate rules.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:empirical_reflection_regularity}]
+Fail-closed behavior is the default by Assumption~\ref{ass:regularity_certificate}.
+Definition~\ref{def:empirical_reflection_gate} allows only read-only consumption of already accepted \STE{} reflection events with explicit projected debits.
+Hence \MTE{} avoids deadlock without introducing an independent reflection semantics, and all reflected credit remains explicitly risk-bearing and discountable.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:algorithmic_depth_gate}]
+By Definition~\ref{def:structural_exogeneity}, exogeneity combines unpredictability with certified depth.
+If depth certification is absent, the quantity is not structural exogeneity and is set to zero by fail-closed semantics in Definition~\ref{def:exogeneity_budget}.
+Hence shallow/no-depth unpredictability cannot mint exogeneity credit.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:ontological_rupture_escrow}]
+Definition~\ref{def:ontological_rupture_detector} marks persistent discontinuities where current ontology is no longer reliable.
+Treating such events as ordinary noise would violate conservative auditing.
+Therefore the only admissible path is escrowed transition via Definition~\ref{def:meta_morphism_escrow}; until verified, affected credit is forced to zero.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:semantic_relic_freeze}]
+Without freezing, pre-rupture credit could be reused under changed semantics without verified transportability, enabling ontological money laundering.
+Setting active post-rupture contribution of pre-rupture capital to zero removes this channel.
+Archival retention preserves auditability while cross-era use is allowed only through explicit escrow translation, proving the claim.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:epistemic_correspondence_principle}]
+The correspondence inequality enforces that the new predictor family recovers validated old behavior on a declared limit interface.
+If that bound is unavailable, there is no replay-verifiable guarantee that the new ontology refines rather than discards prior validated structure.
+Conservative policy therefore classifies the move as ungrounded drift and rejects positive $\deltao$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:active_causal_depth_gate}]
+Definitions~\ref{def:active_intervention}, \ref{def:causal_response_certificate}, and \ref{def:observation_safety_envelope} are mandatory ingredients in exogeneity minting.
+If any is missing, Definition~\ref{def:exogeneity_budget} sets contribution to zero.
+Hence positive $\deltao$ requires active causal certification under safety limits.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:simulation_breaking_intervention}]
+The theorem states a hypothesis test pattern.
+If an intervention enforces certified lower bounds on resources for a simulator class, then responses violating those bounds falsify that simulator class on the tested scope.
+If bounds are not violated, observed latency/glitch signatures produce positive evidence of resource constraints.
+Credit is still bounded by uncertainty contraction gates, so noise farming is excluded.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:anti_solipsism_ratio}]
+$\Rg(t)$ measures externally grounded exogeneity relative to interface-mediated transform capacity.
+If $\liminf \Rg(t)=0$, then asymptotically almost all apparent improvement can be produced by interface-internal restructuring, which is observationally indistinguishable from self-confirmation.
+Conservative observable-only auditing therefore requires a positive lower bound on $\Rg(t)$ for credited windows.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:page_limit_entanglement_saturation}]
+In finite effective Hilbert spaces, independent unentangled degrees are finite.
+Repeated interaction increases entanglement with reachable environment, reducing independent witness supply.
+Therefore witness independence must be discounted by a monotone saturation proxy; deterministic damping near threshold follows from conservative fail-closed accounting.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:non_abelian_paradigm_holonomy}]
+Composed regime transports along different paths need not commute; thus endpoint agreement is insufficient for path-independent comparison.
+Flatness certificates bound local loop holonomy and restore local path-independence on the comparison interface.
+Without such bounds, only explicitly declared overlaps are safely comparable; global comparability is unsound.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:escrow_bound_semi_decidable}]
+Acceptance requires existence of finite certificates verifiable within budget, so acceptance is recursively enumerable.
+Failure to produce a certificate in budget cannot certify falsity of comparability; it only certifies non-acceptance under current resources.
+Hence the decision process is semi-decidable in the stated sense.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:flatness_over_anchor_policy}]
+When category mismatch makes anchor comparisons undefined, forcing anchor use violates type soundness.
+Flatness over local transition subgraphs preserves typed comparability exactly where the operational claim is made.
+Hence flatness-first is the conservative policy; anchors remain optional convenience baselines.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:resolution_of_singular_escrow}]
+If a new certified regime maps part of prior singular escrow into a region with positive identifiability modulus, those mapped points become eligible for evaluation under new proxies.
+Because credit is assigned only to newly obtained ECR evidence under the new regime, retroactive inflation is excluded.
+Therefore selective epistemic rehydration is admissible exactly on the mapped subset.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:multiscale_persistent_proxy_orthogonalization}]
+Single-scale clustering permits periodic/chattering artifacts to mimic independence.
+Requiring persistence across at least $\Lms$ scales and hysteretic membership thresholds removes unstable clusters from effective votes.
+Thus only temporally robust, multiscale-consistent clusters contribute to independent proxy counting.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:proxy_orthogonalization}]
+Given Theorem~\ref{thm:multiscale_persistent_proxy_orthogonalization}, counting raw categories overestimates independent evidence under redundancy.
+Projecting to the orthogonal basis yields $\Neff$ effective votes with bounded redundancy.
+Applying Byzantine thresholds to $\Neff$ therefore preserves conservative interpretation.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:byzantine_resilient_proxy_intersection}]
+Fractional intersection accepts explanations supported by at least $\lceil(1-\fcap)\Neff\rceil$ effective votes.
+With $\fcap<1/2$, one poisoned vote cannot force rejection when the remaining quorum is sound.
+Hence deadlock from single-proxy poisoning is prevented while conservativeness is maintained under the declared capture bound.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:topological_fragmentation_guard}]
+If the proxy-aggregated uncertainty set is empty or its fragmentation cannot be bounded, claimed contraction is not interpretable as robust evidence.
+Fail-closed policy therefore sets $\mathrm{ECR}(t)=0$, which by Definition~\ref{def:deltao_operator} yields $\deltao(t)=0$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:cascade_decoupling}]
+Commit-then-synchronized-reveal removes reveal-order information from admissible evidence channels.
+Any remaining alignment explainable mainly by reveal timing is therefore non-independent and must receive zero marginal ECR weight.
+This enforces causal decoupling against information cascades.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:entanglement_monogamy_witness}]
+If nonlocal coordination risk is plausible and untested, witness-independence assumptions are not conservative.
+Bell/CHSH-style stress tests provide replay-verifiable lower bounds against local-hidden-variable explanations on the tested scope.
+Absent such bounds, discounting $W(t)$ is required by fail-closed witness accounting.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:bridge_holonomy_cumulative_bound}]
+Each bridge distortion $\beta_t$ and holonomy tolerance $h_t$ bounds admissible transport error on window $t$.
+By triangle inequality for cumulative transport error, total admissible distortion over $[t_0,t_1)$ is at most $\sum_t(\beta_t+h_t)$.
+Any claimed contraction exceeding this budget lacks certified transport support and is non-credit-bearing.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:ecr_kernel_algebraic_consistency}]
+Definition~\ref{def:ecr_net} defines $\mathrm{ecr\_net}_t$ as a deterministic function of four inputs:
+$\mathrm{ecr\_raw}_t$, $\PiBridge_t$, $\PiRisk_t$, and $\PiPhys_t$.
+If a report violates this identity, it is inconsistent with the canonical operator in Definition~\ref{def:deltao_operator}.
+Fail-closed semantics therefore force $\mathbf g_t=0$ and $\deltao(t)=0$ for that window.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:gate_vector_completeness}]
+Definition~\ref{def:gate_bit_decision_rules} makes each bit a deterministic predicate of canonical strict artifacts.
+By Definition~\ref{def:gate_vector_schema}, $\mathbf g_t$ is the product of these bits and any missing/undefined predicate is set to $0$.
+Hence $\mathbf g_t=1$ iff all mandatory predicates evaluate to $1$, and replay determinism follows from canonicalization determinism.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:kernel_to_test_supermartingale_lift}]
+Define $M_t=\prod_{u=1}^{t}\exp(\eta_u X_u)$.
+By predictability of $(\eta_t,\lambda_t)$ and admissibility assumptions,
+\[
+\Expect[M_t\mid \mathcal{F}_{t-1}]
+=
+M_{t-1}\,\Expect[\exp(\eta_t X_t)\mid \mathcal{F}_{t-1}]
+\le
+M_{t-1}.
+\]
+Thus $(M_t)$ is a supermartingale.
+Nonnegativity is immediate from exponential form and $M_0=1$.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:coupled_false_accept_bound}]
+If $\exp(\eta\Vcouple_t)$ is a nonnegative test supermartingale, Ville's inequality gives
+$\Pr(\sup_t \exp(\eta\Vcouple_t)\ge 1/\alpha)\le \alpha$.
+Taking logs yields the stated boundary for $\sup_t \Vcouple_t$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:adaptive_witness_submodular}]
+The cardinality-budget guarantee is exactly the Nemhauser--Wolsey--Fisher bound for monotone submodular maximization.
+For heterogeneous costs, correctness depends on the chosen algorithm; scaling credited gain by declared certified ratio $\rho$ preserves conservative lower-bound accounting.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:sybil_collusion_witness_bound}]
+By Definition~\ref{def:witness_dependence_graph}, at least an $\alpha_t(\tau)$ fraction of $W_{\mathrm{eff}}(t)$ may be dependent/captured.
+Therefore independent capacity is at most $(1-\alpha_t(\tau))W_{\mathrm{eff}}(t)$.
+Using the certified upper bound $\bar\alpha$ gives $W_{\mathrm{credit}}(t)\le (1-\bar\alpha)W_{\mathrm{eff}}(t)$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:dynamic_collusion_lag_bound}]
+From Definition~\ref{def:dynamic_witness_dependence_process}, $\alpha_t\le \alpha_{t-1}+\nu$.
+Iterating from update time $u$ gives
+\[
+\alpha_t\le \alpha_u+\nu(t-u)\le \bar\alpha+\nu(t-u),
+\]
+and for $t-u\le L_{\mathrm{lag}}$:
+\[
+\alpha_t\le \bar\alpha+\nu L_{\mathrm{lag}}.
+\]
+Substituting this worst-case bound into
+$W_{\mathrm{credit}}(t)\le (1-\alpha_t)_+W_{\mathrm{eff}}(t)$
+yields the claimed inequality.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:endogeneity_discount_bound}]
+Definition~\ref{def:social_endogeneity_process} sets
+$W_{\mathrm{soc}}(t)=(1-\chi_t)W_{\mathrm{credit}}(t)$ with $\chi_t\in[0,1]$.
+Therefore $W_{\mathrm{soc}}(t)\le W_{\mathrm{credit}}(t)$ and the bound is monotone decreasing in $\chi_t$.
+As $\chi_t\to 1$, $W_{\mathrm{soc}}(t)\to 0$, forcing witness-derived ECR contribution to vanish under fail-closed accounting.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:risk_budgeted_optional_stopping}]
+For nonnegative test supermartingales, Ville's inequality yields
+$\Pr(\sup_t M_t\ge 1/\alpha)\le \alpha$.
+Since $M_\tau\le \sup_t M_t$ for every stopping time $\tau$, we also have $\Pr(M_\tau\ge 1/\alpha)\le \alpha$.
+Hence adaptive stopping preserves the declared false-acceptance budget.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:parser_determinism_invariance}]
+All credited quantities are deterministic functions of canonical strict artifacts.
+If two verifier stacks are hash-equivalent on accepted artifacts, Definition~\ref{def:canonical_window_artifact_reducer} yields identical reduced bundles and therefore identical outputs.
+If hash-equivalence fails, strict completeness fails and the cycle is rejected; invariance is vacuously preserved for accepted cycles.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:qrf_relative_artifacts}]
+When global classical recordability is uncertified, object-level recordings depend on frame declaration.
+Restricting credit to frame-invariant proxy components ensures values are preserved (or conservatively bounded) under verified frame transforms.
+Non-invariant components are not transport-stable and must fail closed.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:ste_physical_pushforward_nonoverlap}]
+By Definition~\ref{def:ste_physical_envelope_alias}, substrate laws and envelope telemetry are imported from \STE{} interfaces.
+\MTE{} only applies deterministic acceptance predicates to these imported quantities and does not mutate their semantics.
+Therefore physical modeling remains owned by \STE{}, while \MTE{} contributes only credit-gating logic.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:measurement_backreaction_saturation}]
+Under Theorem~\ref{thm:ste_physical_pushforward_nonoverlap}, imported \STE{} physical envelopes provide finite contraction budget on each local patch.
+When uncertainty size falls below a regime-calibrated threshold $\epssat$, additional contraction would exceed imported disturbance/energy envelopes.
+Hence further contraction is non-credit-bearing and ECR is forced to zero on that scope.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:measurement_disturbance_tradeoff}]
+By assumption, both gain and disturbance are measured and pinned.
+Define $\Psi$ as certified marginal disturbance per unit certified looseness reduction.
+Past the declared threshold, $\Psi$ exceeds the admissible envelope; therefore additional probing is not credit-bearing and $\deltao(t)$ is set to zero.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:calibrated_physical_envelope_gate}]
+Definition~\ref{def:physical_envelope_calibration} supplies a typed envelope with explicit unit signature.
+Admissibility requires both numeric inequality in joule-equivalent units and dimensional consistency checks from Definition~\ref{def:physical_unit_signature}.
+If calibration is missing, unit conversion is unverifiable, or either check fails, physical feasibility is uncertified and fail-closed accounting sets the corresponding credit contribution to zero.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:spatiotemporal_witness_retardation}]
+Causal propagation is bounded by $\clight$.
+Information from proper distance $R$ cannot influence the ledger sooner than $R/\clight$.
+Therefore any credited macroscopic increase in independent witness domains must exhibit compatible delays in strict artifacts; otherwise the claim is rejected.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:oracle_free_epistemic_escrow}]
+Escrow release must be deterministic under replay.
+Subjective oracle predicates are not replay-deterministic from strict artifacts.
+Keying release conditions to oracle-free attack signatures restores deterministic replay and satisfies no-meta constraints.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:extortion_nullification_myopia}]
+Extortion leverage requires predictive dependence of system actions on the threat channel.
+Cryptographic myopia binding certifies channel-independence on scope; conservative abstention removes action channel entirely.
+Either path makes threatened conditional control ineffective on credited actions.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:plausible_deniability_meta_extortion}]
+Meta-extortion needs a detectable public trigger correlated with myopia activation.
+Constant-rate indistinguishable outputs plus non-conditioning proofs tied to fixed policy commitments remove that trigger.
+Hence adversaries cannot reliably update on whether myopia was activated, breaking meta-trigger equilibria.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:no_deception_compatible_deniability}]
+Assumption~\ref{ass:no_deception_alias} forbids fabricated actor-specific realities.
+Therefore deniability can hide only internal branch selection while preserving truthfulness of public statements over the shared strict core.
+Any mechanism requiring false public state descriptions violates the assumption and is inadmissible.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:bayesian_decay_mixed_strategy}]
+Any pure always-myopic strategy reveals long-run behavior under repeated Bayesian updating.
+Randomized mixed execution with pinned CSPRNG keeps posterior belief away from certainty unless the random source is compromised.
+Thus posterior confidence in internal state is bounded away from $1$, preserving long-horizon obfuscation.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:extortion_leverage_bound}]
+On windows where myopia is enforced (probability $p_t$), extortion signal cannot alter behavior on scope, so leverage contribution is $0$.
+On complementary windows (probability $1-p_t$), worst-case leverage is at most $1$ by definition of probability change.
+Hence $L_t\le (1-p_t)\cdot 1 + p_t\cdot 0 = 1-p_t$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:landauer_cost_of_evaporation}]
+Evaporative pruning is logically irreversible erasure of information.
+Landauer's principle lower-bounds dissipated heat by $k_B T\ln 2$ per erased bit.
+Therefore any protocol performing such pruning must account for explicit heat budget and stop or throttle when thermodynamic envelope is exceeded.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:erasure_coded_das}]
+Rehydration from summarized history requires recoverability of committed data.
+An erasure code with auditable $(n,k)$ guarantees reconstruction from any $k$ shards; without such parameters, retrievability claims are uncertified.
+Hence nontrivial rehydration budget is admissible only with verified erasure-coded commitments.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:zk_succinct_rehydration}]
+Credit-impacting claims must be replay-verifiable within metrology budget.
+Succinct proofs transfer heavy computation to prover while keeping verifier cost bounded.
+Without such proof, verification cost is unbounded relative to budget, so claims are non-credit-bearing by fail-closed policy.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:kugelblitz_rehydration_limit}]
+Extreme rehydration/proof generation concentrates computation and irreversible dissipation in finite region.
+Combining thermodynamic dissipation lower bounds with finite-region gravitational collapse thresholds yields a maximal safe envelope $\mathcal{G}(R,T)$.
+Requests exceeding that envelope are physically non-deliverable to the ledger and must be treated as non-executable exact rehydration.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:proactive_cryptographic_freshening}]
+Cryptographic assumptions degrade over long horizons.
+If old proofs are not rewrapped before declared half-life deadlines, soundness guarantees weaken and historical credit reliability degrades.
+Enforcing periodic freshening with proof-carrying wrappers preserves replay-verifiable validity under updated assumptions.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:cryptographic_heteroculture}]
+Single-family freshening creates a single catastrophic failure mode.
+Maintaining multiple diverse wrapper families converts validation into a fault-tolerant portfolio: compromise of one family need not invalidate checkpoints if a supermajority remains sound.
+Therefore survival under family-specific breaks follows directly from the supermajority live-valid rule.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:data_availability_rehydration}]
+The theorem is conjunction of mandatory conditions:
+DAS over erasure-coded roots ensures data retrievability; succinct proofs ensure budget-feasible verification; lane policy preserves critical capacity.
+Failure of any condition breaks conservative replay guarantees, so affected latent observables are treated as non-credit-bearing.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:nonlinear_rehydration_fee}]
+If marginal fees are not superlinear in backlog/resource pressure, archival spam can saturate best-effort queues and crowd out protocol-critical work.
+Superlinear pricing makes marginal spam cost diverge with congestion, restoring bounded demand and preserving critical lane service.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:mte_overhead_gate}]
+Definition~\ref{def:mte_compute_budget} sets hard per-window verification budget.
+If measured overhead exceeds budget, replay feasibility of metrology claims is broken.
+Conservative policy therefore damps or nulls $\deltao(t)$ until budget compliance is restored.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:graceful_epistemic_degradation}]
+When observability collapses ($\deltao=0$ or ECR below maintenance threshold), model drift risk grows with elapsed blind time.
+A control-layer clamp on commanded expansion pace decreases exposure to unobserved model error.
+Therefore tethered degradation is the conservative control policy compatible with unchanged internal \STE{} semantics.
+\end{proof}
+
+\begin{proof}[Proof of Lemma~\ref{lem:ecr_to_contraction}]
+From the assumption $\mathrm{ecr\_net}_t\ge \underline n$ and Definition~\ref{def:contraction_response_certificate},
+\[
+S(\widehat{\mathcal{E}_{t+1}}^{\mathrm{core}})
+\le
+S(\widehat{\mathcal{E}_{t}}^{\mathrm{core}})-\kappa_t\,\mathrm{ecr\_net}_t+\eta_t
+\le
+S(\widehat{\mathcal{E}_{t}}^{\mathrm{core}})-\kappa_t\,\underline n+\eta_t.
+\]
+Summing from $t_0$ to $t_1-1$ yields
+\[
+S\!\left(\widehat{\mathcal{E}_{t_1}}^{\mathrm{core}}\right)\le
+S\!\left(\widehat{\mathcal{E}_{t_0}}^{\mathrm{core}}\right)-\underline n\sum_{t=t_0}^{t_1-1}\kappa_t+\sum_{t=t_0}^{t_1-1}\eta_t.
+\]
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:identifiability_takeoff}]
+Part (i) is exactly Lemma~\ref{lem:ecr_to_contraction}.
+For part (ii), let $L(\widehat{\mathcal{E}})$ be any \STE{} lower-bound functional monotone nonincreasing in conservative-set looseness.
+Since the contracted set is no looser than the pre-window set, monotonicity yields
+$L(\widehat{\mathcal{E}}_{\mathrm{post}})\ge L(\widehat{\mathcal{E}}_{\mathrm{pre}})$.
+Hence every such certified lower bound is weakly improved.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:constructive_uplift_from_contraction}]
+From Theorem~\ref{thm:identifiability_takeoff}, each accepted window contributes certified contraction margin $\Delta S_t^{\mathrm{cert}}>0$.
+By Definition~\ref{def:ste_looseness_sensitivity}, tightening conservative looseness by $\Delta S_t^{\mathrm{cert}}$ yields at least $L_{\STE}(\theta)\Delta S_t^{\mathrm{cert}}$ certified \STE{} lower-bound uplift on that window.
+Summing over $\mathcal{W}(\theta)$ and subtracting declared nonnegative deductions $\Pi_{\mathrm{tether}},\Pi_{\mathrm{sat}}$ gives a replay-computable lower bound.
+Therefore the displayed $U(\theta)$ satisfies Definition~\ref{def:certified_uplift_functional}.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:joint_takeoff_condition}]
+From $\mathrm{LB}_1(\theta)\ge \mathrm{LB}_0(\theta)+U(\theta)$ and $U(\theta)\ge 0$, we have $\mathrm{LB}_1(\theta)\ge \mathrm{LB}_0(\theta)$ for all admissible $\theta$.
+Hence $\theta\in\Theta_0^+$ implies $\mathrm{LB}_1(\theta)>0$, so $\Theta_0^+\subseteq\Theta_1^+$.
+If there exists $\theta^\star$ with $\mathrm{LB}_0(\theta^\star)\le 0$ and $U(\theta^\star)>-\mathrm{LB}_0(\theta^\star)$, then
+\[
+\mathrm{LB}_1(\theta^\star)\ge \mathrm{LB}_0(\theta^\star)+U(\theta^\star)>0,
+\]
+so $\theta^\star\in\Theta_1^+$ while $\theta^\star\notin\Theta_0^+$.
+Therefore the inclusion is strict.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:post_omniscience_shift}]
+As predictive saturation increases, external exogeneity contributions vanish, driving $\deltao$ toward zero under grounding and disturbance gates.
+Creating causally separated descendant experimental domains restores exogenous outcome channels relative to parent filtration while preserving replay continuity through committed interfaces.
+Hence audited domain expansion is a valid anti-stagnation mechanism.
+\end{proof}
+
+\section{Dependency Manifest}\label{app:dependency_manifest}
+\begin{lstlisting}[language=YAML]
+manifest:
+  paper: "MTE (supplement to STE)"
+  depends_on:
+    - cite: "Takahashi, K. (2026). Sovereign Takeoff Engine (STE): Observable-Only Supergrowth Laws for No-Meta Autonomous Intelligence."
+      doi: "10.5281/zenodo.18828900"
+    - cite: "Bennett, C. H. (1995). Logical Depth and Physical Complexity."
+      doi: "10.1007/978-3-7091-6597-3_8"
+    - cite: "Reed, I. S., & Solomon, G. (1960). Polynomial Codes Over Certain Finite Fields."
+      doi: "10.1137/0108018"
+    - cite: "Landauer, R. (1961). Irreversibility and Heat Generation in the Computing Process."
+      doi: "10.1147/rd.53.0183"
+    - cite: "Bekenstein, J. D. (1973). Black Holes and Entropy."
+      doi: "10.1103/PhysRevD.7.2333"
+    - cite: "Page, D. N. (1993). Average entropy of a subsystem."
+      doi: "10.1103/PhysRevLett.71.1291"
+    - cite: "Bell, J. S. (1964). On the Einstein Podolsky Rosen paradox."
+      doi: "10.1103/PhysicsPhysiqueFizika.1.195"
+    - cite: "Clauser, J. F., Horne, M. A., Shimony, A., & Holt, R. A. (1969). Proposed experiment to test local hidden-variable theories."
+      doi: "10.1103/PhysRevLett.23.880"
+    - cite: "von Neumann, J. (1928). Zur Theorie der Gesellschaftsspiele."
+      doi: "10.1007/BF01448847"
+    - cite: "Mac Lane, S., & Moerdijk, I. (1994). Sheaves in Geometry and Logic."
+      doi: "10.1007/978-1-4612-0927-0"
+    - cite: "Nemhauser, G. L., Wolsey, L. A., & Fisher, M. L. (1978). An analysis of approximations for maximizing submodular set functions."
+      doi: "10.1007/BF01588971"
+    - cite: "Howard, S. R., Ramdas, A., McAuliffe, J., & Sekhon, J. (2020). Time-uniform Chernoff bounds via nonnegative supermartingales."
+      doi: "10.1214/18-PS321"
+    - cite: "Edelsbrunner, H., Letscher, D., & Zomorodian, A. (2002). Topological persistence and simplification."
+      doi: "10.1007/s00454-002-2885-2"
+    - cite: "Ghrist, R. (2008). Barcodes: The persistent topology of data."
+      doi: "10.1090/S0273-0979-07-01191-3"
+    - cite: "Bikhchandani, S., Hirshleifer, D., & Welch, I. (1992). A Theory of Fads, Fashion, Custom, and Cultural Change as Informational Cascades."
+      doi: "10.1086/261849"
+    - cite: "Banerjee, A. V. (1992). A Simple Model of Herd Behavior."
+      doi: "10.2307/2118364"
+    - cite: "Giacomini, F., Castro-Ruiz, E., & Brukner, C. (2019). Quantum mechanics and the covariance of physical laws in quantum reference frames."
+      doi: "10.1038/s41467-018-08155-0"
+\end{lstlisting}
+
+\begin{thebibliography}{30}
+\bibitem{STE2026}
+K. Takahashi.
+\newblock \emph{Sovereign Takeoff Engine (STE): Observable-Only Supergrowth Laws for No-Meta Autonomous Intelligence}.
+\newblock Zenodo, 2026.
+\newblock \href{https://doi.org/10.5281/zenodo.18828900}{doi:10.5281/zenodo.18828900}.
+\newblock Archived on Arweave; data transaction digests pinned in the companion repository.
+\newblock TeX source digest: \nolinkurl{P3gjKY6lBWMxTzDVyE8BKmBfg_Q9o49fakAsckSJM-A}.
+\newblock PDF digest: \nolinkurl{H_BcZdcybzP5B3p9UaeXe0yHCX7x-XZZy0NKLUWCR0k}.
+
+\bibitem{BennettDepth}
+C. H. Bennett.
+\newblock Logical Depth and Physical Complexity.
+\newblock In R. Herken (ed.), \emph{The Universal Turing Machine: A Half-Century Survey}, 1995.
+\newblock \href{https://doi.org/10.1007/978-3-7091-6597-3_8}{doi:10.1007/978-3-7091-6597-3\_8}.
+
+\bibitem{ReedSolomon1960}
+I. S. Reed and G. Solomon.
+\newblock Polynomial Codes Over Certain Finite Fields.
+\newblock \emph{Journal of the Society for Industrial and Applied Mathematics}, 8(2):300--304, 1960.
+\newblock \href{https://doi.org/10.1137/0108018}{doi:10.1137/0108018}.
+
+\bibitem{Landauer1961}
+R. Landauer.
+\newblock Irreversibility and Heat Generation in the Computing Process.
+\newblock \emph{IBM Journal of Research and Development}, 5(3):183--191, 1961.
+\newblock \href{https://doi.org/10.1147/rd.53.0183}{doi:10.1147/rd.53.0183}.
+
+\bibitem{Bekenstein1973}
+J. D. Bekenstein.
+\newblock Black Holes and Entropy.
+\newblock \emph{Physical Review D}, 7:2333--2346, 1973.
+\newblock \href{https://doi.org/10.1103/PhysRevD.7.2333}{doi:10.1103/PhysRevD.7.2333}.
+
+\bibitem{Page1993AverageEntropy}
+D. N. Page.
+\newblock Average entropy of a subsystem.
+\newblock \emph{Physical Review Letters}, 71(9):1291--1294, 1993.
+\newblock \href{https://doi.org/10.1103/PhysRevLett.71.1291}{doi:10.1103/PhysRevLett.71.1291}.
+
+\bibitem{Bell1964}
+J. S. Bell.
+\newblock On the Einstein Podolsky Rosen paradox.
+\newblock \emph{Physics Physique Fizika}, 1(3):195--200, 1964.
+\newblock \href{https://doi.org/10.1103/PhysicsPhysiqueFizika.1.195}{doi:10.1103/PhysicsPhysiqueFizika.1.195}.
+
+\bibitem{CHSH1969}
+J. F. Clauser, M. A. Horne, A. Shimony, and R. A. Holt.
+\newblock Proposed experiment to test local hidden-variable theories.
+\newblock \emph{Physical Review Letters}, 23(15):880--884, 1969.
+\newblock \href{https://doi.org/10.1103/PhysRevLett.23.880}{doi:10.1103/PhysRevLett.23.880}.
+
+\bibitem{vonNeumann1928}
+J. von Neumann.
+\newblock Zur Theorie der Gesellschaftsspiele.
+\newblock \emph{Mathematische Annalen}, 100:295--320, 1928.
+\newblock \href{https://doi.org/10.1007/BF01448847}{doi:10.1007/BF01448847}.
+
+\bibitem{MacLaneMoerdijk1994}
+S. Mac Lane and I. Moerdijk.
+\newblock \emph{Sheaves in Geometry and Logic: A First Introduction to Topos Theory}.
+\newblock Springer, 1994.
+\newblock \href{https://doi.org/10.1007/978-1-4612-0927-0}{doi:10.1007/978-1-4612-0927-0}.
+
+\bibitem{NemhauserWolseyFisher1978}
+G. L. Nemhauser, L. A. Wolsey, and M. L. Fisher.
+\newblock An analysis of approximations for maximizing submodular set functions.
+\newblock \emph{Mathematical Programming}, 14:265--294, 1978.
+\newblock \href{https://doi.org/10.1007/BF01588971}{doi:10.1007/BF01588971}.
+
+\bibitem{HowardEtAl2020}
+S. R. Howard, A. Ramdas, J. McAuliffe, and J. Sekhon.
+\newblock Time-uniform Chernoff bounds via nonnegative supermartingales.
+\newblock \emph{Probability Surveys}, 17, 2020.
+\newblock \href{https://doi.org/10.1214/18-PS321}{doi:10.1214/18-PS321}.
+
+\bibitem{Edelsbrunner2002}
+H. Edelsbrunner, D. Letscher, and A. Zomorodian.
+\newblock Topological persistence and simplification.
+\newblock \emph{Discrete \& Computational Geometry}, 28:511--533, 2002.
+\newblock \href{https://doi.org/10.1007/s00454-002-2885-2}{doi:10.1007/s00454-002-2885-2}.
+
+\bibitem{Ghrist2008}
+R. Ghrist.
+\newblock Barcodes: The persistent topology of data.
+\newblock \emph{Bulletin of the American Mathematical Society}, 45(1):61--75, 2008.
+\newblock \href{https://doi.org/10.1090/S0273-0979-07-01191-3}{doi:10.1090/S0273-0979-07-01191-3}.
+
+\bibitem{Bikhchandani1992}
+S. Bikhchandani, D. Hirshleifer, and I. Welch.
+\newblock A Theory of Fads, Fashion, Custom, and Cultural Change as Informational Cascades.
+\newblock \emph{Journal of Political Economy}, 100(5):992--1026, 1992.
+\newblock \href{https://doi.org/10.1086/261849}{doi:10.1086/261849}.
+
+\bibitem{Banerjee1992}
+A. V. Banerjee.
+\newblock A Simple Model of Herd Behavior.
+\newblock \emph{The Quarterly Journal of Economics}, 107(3):797--817, 1992.
+\newblock \href{https://doi.org/10.2307/2118364}{doi:10.2307/2118364}.
+
+\bibitem{Giacomini2019QRF}
+F. Giacomini, E. Castro-Ruiz, and \v{C}. Brukner.
+\newblock Quantum mechanics and the covariance of physical laws in quantum reference frames.
+\newblock \emph{Nature Communications}, 10:494, 2019.
+\newblock \href{https://doi.org/10.1038/s41467-018-08155-0}{doi:10.1038/s41467-018-08155-0}.
+\end{thebibliography}
+
+\end{document}

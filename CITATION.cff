@@ -1,0 +1,31 @@
+﻿cff-version: 1.2.0
+message: "If you use this repository, please cite the software and the two source papers."
+title: "observable-replay-lab: Observable-Only Deterministic Replay MRI"
+type: software
+version: 0.1.0
+license: Apache-2.0
+authors:
+  - family-names: "Takahashi"
+    given-names: "K."
+abstract: >-
+  Minimal reference implementation for observable-only, no-meta, deterministic replay,
+  and reproducible audit of STE/MTE-inspired growth and epistemics proxies.
+references:
+  - type: article
+    authors:
+      - family-names: "Takahashi"
+        given-names: "K."
+    title: "Sovereign Takeoff Engine (STE): Observable-Only Supergrowth Laws for No-Meta Autonomous Intelligence"
+    year: 2026
+    publisher: "Zenodo"
+    doi: "10.5281/zenodo.18828900"
+    url: "https://doi.org/10.5281/zenodo.18828900"
+  - type: article
+    authors:
+      - family-names: "Takahashi"
+        given-names: "K."
+    title: "Metrology-Theoretic Epistemics Engine (MTE): Observable-Only Metrology for Long-Horizon Autonomous Intelligence"
+    year: 2026
+    publisher: "Zenodo"
+    doi: "10.5281/zenodo.18845340"
+    url: "https://doi.org/10.5281/zenodo.18845340"
